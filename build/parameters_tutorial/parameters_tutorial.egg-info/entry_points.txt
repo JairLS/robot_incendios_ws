@@ -1,0 +1,2 @@
+[console_scripts]
+param_node = parameters_tutorial.parameter_node:main

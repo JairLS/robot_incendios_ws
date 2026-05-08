@@ -1,0 +1,32 @@
+[4.431s] Invoking command in '/home/jairls/robot_incendios_ws/build/diff_drive_sim_gazebo': PYTHONPATH=/home/jairls/robot_incendios_ws/build/diff_drive_sim_gazebo/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/jairls/robot_incendios_ws/install/diff_drive_sim_gazebo/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/jairls/robot_incendios_ws/build/diff_drive_sim_gazebo/build --no-deps symlink_data
+[6.040s] running develop
+[6.041s] running egg_info
+[6.041s] creating diff_drive_sim_gazebo.egg-info
+[6.041s] writing diff_drive_sim_gazebo.egg-info/PKG-INFO
+[6.041s] writing dependency_links to diff_drive_sim_gazebo.egg-info/dependency_links.txt
+[6.041s] writing requirements to diff_drive_sim_gazebo.egg-info/requires.txt
+[6.041s] writing top-level names to diff_drive_sim_gazebo.egg-info/top_level.txt
+[6.042s] writing manifest file 'diff_drive_sim_gazebo.egg-info/SOURCES.txt'
+[6.159s] reading manifest file 'diff_drive_sim_gazebo.egg-info/SOURCES.txt'
+[6.161s] writing manifest file 'diff_drive_sim_gazebo.egg-info/SOURCES.txt'
+[6.205s] running build_ext
+[6.205s] Creating /home/jairls/robot_incendios_ws/install/diff_drive_sim_gazebo/lib/python3.12/site-packages/diff-drive-sim-gazebo.egg-link (link to .)
+[6.205s] 
+[6.205s] Installed /home/jairls/robot_incendios_ws/build/diff_drive_sim_gazebo
+[6.206s] running symlink_data
+[6.206s] creating /home/jairls/robot_incendios_ws/install/diff_drive_sim_gazebo/share/ament_index
+[6.207s] creating /home/jairls/robot_incendios_ws/install/diff_drive_sim_gazebo/share/ament_index/resource_index
+[6.207s] creating /home/jairls/robot_incendios_ws/install/diff_drive_sim_gazebo/share/ament_index/resource_index/packages
+[6.209s] symbolically linking /home/jairls/robot_incendios_ws/build/diff_drive_sim_gazebo/resource/diff_drive_sim_gazebo -> /home/jairls/robot_incendios_ws/install/diff_drive_sim_gazebo/share/ament_index/resource_index/packages
+[6.209s] symbolically linking /home/jairls/robot_incendios_ws/build/diff_drive_sim_gazebo/package.xml -> /home/jairls/robot_incendios_ws/install/diff_drive_sim_gazebo/share/diff_drive_sim_gazebo
+[6.210s] creating /home/jairls/robot_incendios_ws/install/diff_drive_sim_gazebo/share/diff_drive_sim_gazebo/worlds
+[6.212s] symbolically linking /home/jairls/robot_incendios_ws/build/diff_drive_sim_gazebo/worlds/diff_drive.sdf -> /home/jairls/robot_incendios_ws/install/diff_drive_sim_gazebo/share/diff_drive_sim_gazebo/worlds
+[6.213s] symbolically linking /home/jairls/robot_incendios_ws/build/diff_drive_sim_gazebo/worlds/diff_drive_empty.sdf -> /home/jairls/robot_incendios_ws/install/diff_drive_sim_gazebo/share/diff_drive_sim_gazebo/worlds
+[6.214s] creating /home/jairls/robot_incendios_ws/install/diff_drive_sim_gazebo/share/diff_drive_sim_gazebo/launch
+[6.216s] symbolically linking /home/jairls/robot_incendios_ws/build/diff_drive_sim_gazebo/launch/diff_drive_launch.py -> /home/jairls/robot_incendios_ws/install/diff_drive_sim_gazebo/share/diff_drive_sim_gazebo/launch
+[6.218s] symbolically linking /home/jairls/robot_incendios_ws/build/diff_drive_sim_gazebo/launch/diff_drive_urdf_launch.py -> /home/jairls/robot_incendios_ws/install/diff_drive_sim_gazebo/share/diff_drive_sim_gazebo/launch
+[6.220s] creating /home/jairls/robot_incendios_ws/install/diff_drive_sim_gazebo/share/diff_drive_sim_gazebo/resource
+[6.220s] symbolically linking /home/jairls/robot_incendios_ws/build/diff_drive_sim_gazebo/resource/diff_drive.rviz -> /home/jairls/robot_incendios_ws/install/diff_drive_sim_gazebo/share/diff_drive_sim_gazebo/resource
+[6.221s] symbolically linking /home/jairls/robot_incendios_ws/build/diff_drive_sim_gazebo/resource/diff_drive_urdf.rviz -> /home/jairls/robot_incendios_ws/install/diff_drive_sim_gazebo/share/diff_drive_sim_gazebo/resource
+[6.221s] symbolically linking /home/jairls/robot_incendios_ws/build/diff_drive_sim_gazebo/resource/diff_drive.urdf -> /home/jairls/robot_incendios_ws/install/diff_drive_sim_gazebo/share/diff_drive_sim_gazebo/resource
+[6.296s] Invoked command in '/home/jairls/robot_incendios_ws/build/diff_drive_sim_gazebo' returned '0': PYTHONPATH=/home/jairls/robot_incendios_ws/build/diff_drive_sim_gazebo/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/jairls/robot_incendios_ws/install/diff_drive_sim_gazebo/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/jairls/robot_incendios_ws/build/diff_drive_sim_gazebo/build --no-deps symlink_data

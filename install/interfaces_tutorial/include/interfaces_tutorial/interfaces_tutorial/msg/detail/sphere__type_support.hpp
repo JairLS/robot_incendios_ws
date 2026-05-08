@@ -1,0 +1,1 @@
+/home/jairls/robot_incendios_ws/build/interfaces_tutorial/rosidl_generator_cpp/interfaces_tutorial/msg/detail/sphere__type_support.hpp

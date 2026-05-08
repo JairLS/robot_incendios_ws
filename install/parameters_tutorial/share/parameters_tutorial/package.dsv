@@ -1,0 +1,9 @@
+source;share/parameters_tutorial/hook/pythonpath.ps1
+source;share/parameters_tutorial/hook/pythonpath.dsv
+source;share/parameters_tutorial/hook/pythonpath.sh
+source;share/parameters_tutorial/hook/ament_prefix_path.ps1
+source;share/parameters_tutorial/hook/ament_prefix_path.dsv
+source;share/parameters_tutorial/hook/ament_prefix_path.sh
+source;../../build/parameters_tutorial/share/parameters_tutorial/hook/pythonpath_develop.ps1
+source;../../build/parameters_tutorial/share/parameters_tutorial/hook/pythonpath_develop.dsv
+source;../../build/parameters_tutorial/share/parameters_tutorial/hook/pythonpath_develop.sh

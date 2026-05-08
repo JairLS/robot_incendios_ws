@@ -1,0 +1,1 @@
+/home/jairls/robot_incendios_ws/scr/ros2-tutorials-ws/src/rosmasterx3_sim/launch/rosmaster_launch.py

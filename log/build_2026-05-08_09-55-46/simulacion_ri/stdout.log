@@ -1,0 +1,62 @@
+Built target ament_cmake_python_copy_simulacion_ri_setup
+Built target ament_cmake_python_copy_simulacion_ri
+running egg_info
+writing simulacion_ri.egg-info/PKG-INFO
+writing dependency_links to simulacion_ri.egg-info/dependency_links.txt
+writing top-level names to simulacion_ri.egg-info/top_level.txt
+reading manifest file 'simulacion_ri.egg-info/SOURCES.txt'
+writing manifest file 'simulacion_ri.egg-info/SOURCES.txt'
+Built target ament_cmake_python_build_simulacion_ri_egg
+-- Install configuration: ""
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/environment/pythonpath.sh
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/environment/pythonpath.dsv
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/lib/python3.12/site-packages/simulacion_ri-1.0.0-py3.12.egg-info
+-- Installing: /home/jairls/robot_incendios_ws/install/simulacion_ri/lib/python3.12/site-packages/simulacion_ri-1.0.0-py3.12.egg-info/top_level.txt
+-- Installing: /home/jairls/robot_incendios_ws/install/simulacion_ri/lib/python3.12/site-packages/simulacion_ri-1.0.0-py3.12.egg-info/dependency_links.txt
+-- Installing: /home/jairls/robot_incendios_ws/install/simulacion_ri/lib/python3.12/site-packages/simulacion_ri-1.0.0-py3.12.egg-info/PKG-INFO
+-- Installing: /home/jairls/robot_incendios_ws/install/simulacion_ri/lib/python3.12/site-packages/simulacion_ri-1.0.0-py3.12.egg-info/SOURCES.txt
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/lib/python3.12/site-packages/simulacion_ri
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/lib/python3.12/site-packages/simulacion_ri/odom_tf_publisher.py
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/lib/python3.12/site-packages/simulacion_ri/lidar_tf_publisher.py
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/lib/python3.12/site-packages/simulacion_ri/__init__.py
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/lib/python3.12/site-packages/simulacion_ri/robot.py
+Listing '/home/jairls/robot_incendios_ws/install/simulacion_ri/lib/python3.12/site-packages/simulacion_ri'...
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/lib/simulacion_ri/lidar_tf
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/lib/simulacion_ri/odom_tf
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/config
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/config/slam_toolbox_params.yaml
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/config/robot.rviz
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/config/joint_names_Ensamblaje_V1.yaml
+-- Installing: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/config/mapper_params_online_async.yaml
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/launch
+-- Installing: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/launch/gazebo.launch.py
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/launch/slam.launch.py
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/launch/display.launch
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/launch/gazebo.launch
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/launch/display.launch.py
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/meshes
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/meshes/rueda_trasera_derecha_link.STL
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/meshes/lidar_link.STL
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/meshes/rueda_trasera_izquierda_link.STL
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/meshes/rueda_delante_izquierda_link.STL
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/meshes/base_link.STL
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/meshes/rueda_delante_derecha_link.STL
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/urdf
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/urdf/Ensamblaje_URDF_Final.urdf
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/urdf/Ensamblaje_URDF_Final.csv
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/textures
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/ament_index/resource_index/package_run_dependencies/simulacion_ri
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/ament_index/resource_index/parent_prefix_path/simulacion_ri
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/environment/ament_prefix_path.sh
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/environment/ament_prefix_path.dsv
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/environment/path.sh
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/environment/path.dsv
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/local_setup.bash
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/local_setup.sh
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/local_setup.zsh
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/local_setup.dsv
+-- Installing: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/package.dsv
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/ament_index/resource_index/packages/simulacion_ri
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/cmake/simulacion_riConfig.cmake
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/cmake/simulacion_riConfig-version.cmake
+-- Up-to-date: /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/package.xml

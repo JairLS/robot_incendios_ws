@@ -1,0 +1,5 @@
+[console_scripts]
+listener = pubsub_package.subscriber:main
+listener_ci = pubsub_package.subscriber_ci:main
+talker = pubsub_package.publisher:main
+talker_ci = pubsub_package.publisher_ci:main

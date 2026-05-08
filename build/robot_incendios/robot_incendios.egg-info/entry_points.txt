@@ -1,0 +1,2 @@
+[console_scripts]
+LiDAR = robot_incendios.LiDAR:main

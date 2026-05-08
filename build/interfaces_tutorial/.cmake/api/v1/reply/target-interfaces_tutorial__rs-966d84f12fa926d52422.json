@@ -1,0 +1,73 @@
+{
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_custom_target"
+		],
+		"files" : 
+		[
+			"/home/jairls/robot_incendios_ws/build/interfaces_tutorial/interfaces_tutorial__rs/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 35,
+				"parent" : 0
+			}
+		]
+	},
+	"id" : "interfaces_tutorial__rs::@715ba23200ad3130dae7",
+	"name" : "interfaces_tutorial__rs",
+	"paths" : 
+	{
+		"build" : "interfaces_tutorial__rs",
+		"source" : "/home/jairls/robot_incendios_ws/build/interfaces_tutorial/interfaces_tutorial__rs"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1,
+				2
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/home/jairls/robot_incendios_ws/build/interfaces_tutorial/interfaces_tutorial__rs/CMakeFiles/interfaces_tutorial__rs",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "/home/jairls/robot_incendios_ws/build/interfaces_tutorial/interfaces_tutorial__rs/CMakeFiles/interfaces_tutorial__rs.rule",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "/home/jairls/robot_incendios_ws/build/interfaces_tutorial/rosidl_generator_rs/interfaces_tutorial/rust/src/lib.rs.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

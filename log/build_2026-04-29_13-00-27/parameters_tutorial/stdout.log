@@ -1,0 +1,23 @@
+running develop
+running egg_info
+creating parameters_tutorial.egg-info
+writing parameters_tutorial.egg-info/PKG-INFO
+writing dependency_links to parameters_tutorial.egg-info/dependency_links.txt
+writing entry points to parameters_tutorial.egg-info/entry_points.txt
+writing requirements to parameters_tutorial.egg-info/requires.txt
+writing top-level names to parameters_tutorial.egg-info/top_level.txt
+writing manifest file 'parameters_tutorial.egg-info/SOURCES.txt'
+reading manifest file 'parameters_tutorial.egg-info/SOURCES.txt'
+writing manifest file 'parameters_tutorial.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/jairls/robot_incendios_ws/install/parameters_tutorial/lib/python3.12/site-packages/parameters-tutorial.egg-link (link to .)
+Installing param_node script to /home/jairls/robot_incendios_ws/install/parameters_tutorial/lib/parameters_tutorial
+
+Installed /home/jairls/robot_incendios_ws/build/parameters_tutorial
+running symlink_data
+creating /home/jairls/robot_incendios_ws/install/parameters_tutorial/share/ament_index
+creating /home/jairls/robot_incendios_ws/install/parameters_tutorial/share/ament_index/resource_index
+creating /home/jairls/robot_incendios_ws/install/parameters_tutorial/share/ament_index/resource_index/packages
+symbolically linking /home/jairls/robot_incendios_ws/build/parameters_tutorial/resource/parameters_tutorial -> /home/jairls/robot_incendios_ws/install/parameters_tutorial/share/ament_index/resource_index/packages
+symbolically linking /home/jairls/robot_incendios_ws/build/parameters_tutorial/package.xml -> /home/jairls/robot_incendios_ws/install/parameters_tutorial/share/parameters_tutorial
+symbolically linking /home/jairls/robot_incendios_ws/build/parameters_tutorial/launch/launch.py -> /home/jairls/robot_incendios_ws/install/parameters_tutorial/share/parameters_tutorial

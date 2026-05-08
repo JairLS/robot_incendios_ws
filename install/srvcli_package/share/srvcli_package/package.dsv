@@ -1,0 +1,9 @@
+source;share/srvcli_package/hook/pythonpath.ps1
+source;share/srvcli_package/hook/pythonpath.dsv
+source;share/srvcli_package/hook/pythonpath.sh
+source;share/srvcli_package/hook/ament_prefix_path.ps1
+source;share/srvcli_package/hook/ament_prefix_path.dsv
+source;share/srvcli_package/hook/ament_prefix_path.sh
+source;../../build/srvcli_package/share/srvcli_package/hook/pythonpath_develop.ps1
+source;../../build/srvcli_package/share/srvcli_package/hook/pythonpath_develop.dsv
+source;../../build/srvcli_package/share/srvcli_package/hook/pythonpath_develop.sh

@@ -1,0 +1,1 @@
+/home/jairls/robot_incendios_ws/build/lifecycle_nodes/launch/launch.py

@@ -1,0 +1,1 @@
+/home/jairls/robot_incendios_ws/build/mecanum_robot_sim/resource/cartographer_params.lua

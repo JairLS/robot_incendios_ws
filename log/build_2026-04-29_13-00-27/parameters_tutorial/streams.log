@@ -1,0 +1,25 @@
+[4.385s] Invoking command in '/home/jairls/robot_incendios_ws/build/parameters_tutorial': PYTHONPATH=/home/jairls/robot_incendios_ws/build/parameters_tutorial/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/jairls/robot_incendios_ws/install/parameters_tutorial/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/jairls/robot_incendios_ws/build/parameters_tutorial/build --no-deps symlink_data
+[5.907s] running develop
+[5.907s] running egg_info
+[5.907s] creating parameters_tutorial.egg-info
+[5.907s] writing parameters_tutorial.egg-info/PKG-INFO
+[5.907s] writing dependency_links to parameters_tutorial.egg-info/dependency_links.txt
+[5.907s] writing entry points to parameters_tutorial.egg-info/entry_points.txt
+[5.908s] writing requirements to parameters_tutorial.egg-info/requires.txt
+[5.908s] writing top-level names to parameters_tutorial.egg-info/top_level.txt
+[5.908s] writing manifest file 'parameters_tutorial.egg-info/SOURCES.txt'
+[5.908s] reading manifest file 'parameters_tutorial.egg-info/SOURCES.txt'
+[5.908s] writing manifest file 'parameters_tutorial.egg-info/SOURCES.txt'
+[5.909s] running build_ext
+[5.909s] Creating /home/jairls/robot_incendios_ws/install/parameters_tutorial/lib/python3.12/site-packages/parameters-tutorial.egg-link (link to .)
+[5.909s] Installing param_node script to /home/jairls/robot_incendios_ws/install/parameters_tutorial/lib/parameters_tutorial
+[5.909s] 
+[5.909s] Installed /home/jairls/robot_incendios_ws/build/parameters_tutorial
+[5.909s] running symlink_data
+[5.909s] creating /home/jairls/robot_incendios_ws/install/parameters_tutorial/share/ament_index
+[5.909s] creating /home/jairls/robot_incendios_ws/install/parameters_tutorial/share/ament_index/resource_index
+[5.910s] creating /home/jairls/robot_incendios_ws/install/parameters_tutorial/share/ament_index/resource_index/packages
+[5.910s] symbolically linking /home/jairls/robot_incendios_ws/build/parameters_tutorial/resource/parameters_tutorial -> /home/jairls/robot_incendios_ws/install/parameters_tutorial/share/ament_index/resource_index/packages
+[5.910s] symbolically linking /home/jairls/robot_incendios_ws/build/parameters_tutorial/package.xml -> /home/jairls/robot_incendios_ws/install/parameters_tutorial/share/parameters_tutorial
+[5.910s] symbolically linking /home/jairls/robot_incendios_ws/build/parameters_tutorial/launch/launch.py -> /home/jairls/robot_incendios_ws/install/parameters_tutorial/share/parameters_tutorial
+[6.018s] Invoked command in '/home/jairls/robot_incendios_ws/build/parameters_tutorial' returned '0': PYTHONPATH=/home/jairls/robot_incendios_ws/build/parameters_tutorial/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/jairls/robot_incendios_ws/install/parameters_tutorial/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/jairls/robot_incendios_ws/build/parameters_tutorial/build --no-deps symlink_data

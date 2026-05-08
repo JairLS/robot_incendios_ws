@@ -1,0 +1,304 @@
+-- The C compiler identification is GNU 13.3.0
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found ament_cmake: 2.5.6 (/opt/ros/jazzy/share/ament_cmake/cmake)
+-- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+-- Override CMake install command with custom implementation using symlinks instead of copying resources
+-- Found geometry_msgs: 5.3.7 (/opt/ros/jazzy/share/geometry_msgs/cmake)
+-- Found rosidl_generator_c: 4.6.7 (/opt/ros/jazzy/share/rosidl_generator_c/cmake)
+-- Found rosidl_generator_cpp: 4.6.7 (/opt/ros/jazzy/share/rosidl_generator_cpp/cmake)
+-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+-- Found rosidl_default_generators: 1.6.0 (/opt/ros/jazzy/share/rosidl_default_generators/cmake)
+-- Found rosidl_adapter: 4.6.7 (/opt/ros/jazzy/share/rosidl_adapter/cmake)
+-- Found ament_cmake_ros: 0.12.0 (/opt/ros/jazzy/share/ament_cmake_ros/cmake)
+-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+-- Found python_cmake_module: 0.11.1 (/opt/ros/jazzy/share/python_cmake_module/cmake)
+-- Found PythonExtra: /usr/bin/python3  
+-- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter Development NumPy Development.Module Development.Embed 
+-- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+-- Found ament_lint_auto: 0.17.5 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+-- Added test 'lint_cmake' to check CMake code style
+-- Added test 'xmllint' to check XML markup files
+-- Configuring done (9.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/jairls/robot_incendios_ws/build/interfaces_tutorial
+[  1%] [34m[1mGenerating type hashes for ROS interfaces[0m
+[  3%] [34m[1mGenerating Rust code for ROS interfaces[0m
+[  3%] Built target ament_cmake_python_symlink_interfaces_tutorial
+[  3%] Built target interfaces_tutorial__rosidl_generator_type_description
+running egg_info
+creating interfaces_tutorial.egg-info
+[  4%] [34m[1mGenerating C code for ROS interfaces[0m
+[  6%] [34m[1mGenerating C++ code for ROS interfaces[0m
+writing interfaces_tutorial.egg-info/PKG-INFO
+writing dependency_links to interfaces_tutorial.egg-info/dependency_links.txt
+writing top-level names to interfaces_tutorial.egg-info/top_level.txt
+writing manifest file 'interfaces_tutorial.egg-info/SOURCES.txt'
+[  6%] Built target interfaces_tutorial__rs
+reading manifest file 'interfaces_tutorial.egg-info/SOURCES.txt'
+writing manifest file 'interfaces_tutorial.egg-info/SOURCES.txt'
+[  6%] Built target ament_cmake_python_build_interfaces_tutorial_egg
+[  6%] Built target interfaces_tutorial__cpp
+[  7%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_generator_c.dir/rosidl_generator_c/interfaces_tutorial/msg/detail/num__description.c.o[0m
+[  9%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_generator_c.dir/rosidl_generator_c/interfaces_tutorial/msg/detail/sphere__functions.c.o[0m
+[ 10%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_generator_c.dir/rosidl_generator_c/interfaces_tutorial/srv/detail/add_two_ints__type_support.c.o[0m
+[ 12%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_generator_c.dir/rosidl_generator_c/interfaces_tutorial/msg/detail/num__type_support.c.o[0m
+[ 13%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_generator_c.dir/rosidl_generator_c/interfaces_tutorial/msg/detail/sphere__description.c.o[0m
+[ 16%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_generator_c.dir/rosidl_generator_c/interfaces_tutorial/msg/detail/num__functions.c.o[0m
+[ 16%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_generator_c.dir/rosidl_generator_c/interfaces_tutorial/msg/detail/sphere__type_support.c.o[0m
+[ 18%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_generator_c.dir/rosidl_generator_c/interfaces_tutorial/srv/detail/add_two_ints__functions.c.o[0m
+[ 20%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_generator_c.dir/rosidl_generator_c/interfaces_tutorial/action/detail/counter__description.c.o[0m
+[ 21%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_generator_c.dir/rosidl_generator_c/interfaces_tutorial/srv/detail/add_two_ints__description.c.o[0m
+[ 23%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_generator_c.dir/rosidl_generator_c/interfaces_tutorial/action/detail/counter__functions.c.o[0m
+[ 24%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_generator_c.dir/rosidl_generator_c/interfaces_tutorial/action/detail/counter__type_support.c.o[0m
+[ 26%] [32m[1mLinking C shared library libinterfaces_tutorial__rosidl_generator_c.so[0m
+[ 26%] Built target interfaces_tutorial__rosidl_generator_c
+[ 29%] [34m[1mGenerating C type support dispatch for ROS interfaces[0m
+[ 29%] [34m[1mGenerating C introspection for ROS interfaces[0m
+[ 32%] [34m[1mGenerating C++ type support for eProsima Fast-RTPS[0m
+[ 30%] [34m[1mGenerating C type support for eProsima Fast-RTPS[0m
+[ 33%] [34m[1mGenerating C++ type support dispatch for ROS interfaces[0m
+[ 35%] [34m[1mGenerating C++ introspection for ROS interfaces[0m
+[ 36%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_c.dir/rosidl_typesupport_c/interfaces_tutorial/msg/sphere__type_support.cpp.o[0m
+[ 38%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_c.dir/rosidl_typesupport_c/interfaces_tutorial/msg/num__type_support.cpp.o[0m
+[ 40%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_c.dir/rosidl_typesupport_c/interfaces_tutorial/srv/add_two_ints__type_support.cpp.o[0m
+[ 41%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_c.dir/rosidl_typesupport_c/interfaces_tutorial/action/counter__type_support.cpp.o[0m
+[ 43%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/interfaces_tutorial/msg/sphere__type_support.cpp.o[0m
+[ 44%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/interfaces_tutorial/action/counter__type_support.cpp.o[0m
+[ 46%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/interfaces_tutorial/msg/num__type_support.cpp.o[0m
+[ 47%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/interfaces_tutorial/srv/add_two_ints__type_support.cpp.o[0m
+[ 49%] [32m[1mLinking CXX shared library libinterfaces_tutorial__rosidl_typesupport_c.so[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/interfaces_tutorial/msg/detail/num__type_support.cpp.o[0m
+[ 52%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/interfaces_tutorial/msg/detail/sphere__type_support.cpp.o[0m
+[ 53%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/interfaces_tutorial/srv/detail/add_two_ints__type_support.cpp.o[0m
+[ 55%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/interfaces_tutorial/action/detail/counter__type_support.cpp.o[0m
+[ 56%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/interfaces_tutorial/msg/detail/num__type_support.c.o[0m
+[ 58%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/interfaces_tutorial/msg/detail/sphere__type_support.c.o[0m
+[ 60%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/interfaces_tutorial/srv/detail/add_two_ints__type_support.c.o[0m
+[ 60%] Built target interfaces_tutorial__rosidl_typesupport_c
+[ 61%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/interfaces_tutorial/action/detail/counter__type_support.c.o[0m
+[ 63%] [32m[1mLinking C shared library libinterfaces_tutorial__rosidl_typesupport_introspection_c.so[0m
+[ 64%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/interfaces_tutorial/msg/detail/dds_fastrtps/num__type_support.cpp.o[0m
+[ 66%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/interfaces_tutorial/msg/detail/dds_fastrtps/sphere__type_support.cpp.o[0m
+[ 67%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/interfaces_tutorial/msg/detail/num__type_support_c.cpp.o[0m
+[ 67%] Built target interfaces_tutorial__rosidl_typesupport_introspection_c
+[ 69%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/interfaces_tutorial/msg/detail/sphere__type_support_c.cpp.o[0m
+[ 70%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/interfaces_tutorial/srv/detail/dds_fastrtps/add_two_ints__type_support.cpp.o[0m
+[ 72%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/interfaces_tutorial/srv/detail/add_two_ints__type_support_c.cpp.o[0m
+[ 73%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/interfaces_tutorial/action/detail/counter__type_support_c.cpp.o[0m
+[ 75%] [32mBuilding CXX object CMakeFiles/interfaces_tutorial__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/interfaces_tutorial/action/detail/dds_fastrtps/counter__type_support.cpp.o[0m
+[ 76%] [32m[1mLinking CXX shared library libinterfaces_tutorial__rosidl_typesupport_cpp.so[0m
+[ 78%] [32m[1mLinking CXX shared library libinterfaces_tutorial__rosidl_typesupport_introspection_cpp.so[0m
+[ 78%] Built target interfaces_tutorial__rosidl_typesupport_cpp
+[ 80%] [32m[1mLinking CXX shared library libinterfaces_tutorial__rosidl_typesupport_fastrtps_c.so[0m
+[ 80%] Built target interfaces_tutorial__rosidl_typesupport_introspection_cpp
+[ 80%] Built target interfaces_tutorial__rosidl_typesupport_fastrtps_c
+[ 81%] [32m[1mLinking CXX shared library libinterfaces_tutorial__rosidl_typesupport_fastrtps_cpp.so[0m
+[ 81%] Built target interfaces_tutorial__rosidl_typesupport_fastrtps_cpp
+[ 81%] Built target interfaces_tutorial
+[ 83%] [34m[1mGenerating Python code for ROS interfaces[0m
+[ 83%] Built target interfaces_tutorial__py
+[ 86%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_generator_py.dir/rosidl_generator_py/interfaces_tutorial/action/_counter_s.c.o[0m
+[ 86%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_generator_py.dir/rosidl_generator_py/interfaces_tutorial/msg/_num_s.c.o[0m
+[ 87%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_generator_py.dir/rosidl_generator_py/interfaces_tutorial/msg/_sphere_s.c.o[0m
+[ 89%] [32mBuilding C object CMakeFiles/interfaces_tutorial__rosidl_generator_py.dir/rosidl_generator_py/interfaces_tutorial/srv/_add_two_ints_s.c.o[0m
+[ 90%] [32m[1mLinking C shared library libinterfaces_tutorial__rosidl_generator_py.so[0m
+[ 90%] Built target interfaces_tutorial__rosidl_generator_py
+[ 92%] [32mBuilding C object CMakeFiles/interfaces_tutorial_s__rosidl_typesupport_fastrtps_c.dir/rosidl_generator_py/interfaces_tutorial/_interfaces_tutorial_s.ep.rosidl_typesupport_fastrtps_c.c.o[0m
+[ 93%] [32mBuilding C object CMakeFiles/interfaces_tutorial_s__rosidl_typesupport_c.dir/rosidl_generator_py/interfaces_tutorial/_interfaces_tutorial_s.ep.rosidl_typesupport_c.c.o[0m
+[ 95%] [32mBuilding C object CMakeFiles/interfaces_tutorial_s__rosidl_typesupport_introspection_c.dir/rosidl_generator_py/interfaces_tutorial/_interfaces_tutorial_s.ep.rosidl_typesupport_introspection_c.c.o[0m
+[ 96%] [32m[1mLinking C shared module rosidl_generator_py/interfaces_tutorial/interfaces_tutorial_s__rosidl_typesupport_c.so[0m
+[ 98%] [32m[1mLinking C shared module rosidl_generator_py/interfaces_tutorial/interfaces_tutorial_s__rosidl_typesupport_fastrtps_c.so[0m
+[100%] [32m[1mLinking C shared module rosidl_generator_py/interfaces_tutorial/interfaces_tutorial_s__rosidl_typesupport_introspection_c.so[0m
+[100%] Built target interfaces_tutorial_s__rosidl_typesupport_c
+[100%] Built target interfaces_tutorial_s__rosidl_typesupport_fastrtps_c
+[100%] Built target interfaces_tutorial_s__rosidl_typesupport_introspection_c
+-- Install configuration: ""
+-- Execute custom install script
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/ament_index/resource_index/rosidl_interfaces/interfaces_tutorial
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/msg/Num.json
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/msg/Sphere.json
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/srv/AddTwoInts.json
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/action/Counter.json
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/action/counter.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/action/detail/counter__functions.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/action/detail/counter__struct.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/action/detail/counter__type_support.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/num__functions.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/num__struct.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/num__type_support.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/sphere__functions.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/sphere__struct.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/sphere__type_support.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/num.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/rosidl_generator_c__visibility_control.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/sphere.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/srv/add_two_ints.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/srv/detail/add_two_ints__functions.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/srv/detail/add_two_ints__struct.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/srv/detail/add_two_ints__type_support.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/environment/library_path.sh
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/environment/library_path.dsv
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/action/detail/counter__rosidl_typesupport_fastrtps_c.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/num__rosidl_typesupport_fastrtps_c.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/sphere__rosidl_typesupport_fastrtps_c.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/rosidl_typesupport_fastrtps_c__visibility_control.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/srv/detail/add_two_ints__rosidl_typesupport_fastrtps_c.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/action/counter.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/action/detail/counter__builder.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/action/detail/counter__struct.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/action/detail/counter__traits.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/action/detail/counter__type_support.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/num__builder.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/num__struct.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/num__traits.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/num__type_support.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/sphere__builder.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/sphere__struct.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/sphere__traits.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/sphere__type_support.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/num.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/rosidl_generator_cpp__visibility_control.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/sphere.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/srv/add_two_ints.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/srv/detail/add_two_ints__builder.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/srv/detail/add_two_ints__struct.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/srv/detail/add_two_ints__traits.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/srv/detail/add_two_ints__type_support.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/action/detail/counter__rosidl_typesupport_fastrtps_cpp.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/num__rosidl_typesupport_fastrtps_cpp.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/sphere__rosidl_typesupport_fastrtps_cpp.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/rosidl_typesupport_fastrtps_cpp__visibility_control.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/srv/detail/add_two_ints__rosidl_typesupport_fastrtps_cpp.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/action/detail/counter__rosidl_typesupport_introspection_c.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/num__rosidl_typesupport_introspection_c.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/sphere__rosidl_typesupport_introspection_c.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/rosidl_typesupport_introspection_c__visibility_control.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/srv/detail/add_two_ints__rosidl_typesupport_introspection_c.h
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/action/detail/counter__rosidl_typesupport_introspection_cpp.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/num__rosidl_typesupport_introspection_cpp.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/msg/detail/sphere__rosidl_typesupport_introspection_cpp.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/include/interfaces_tutorial/interfaces_tutorial/srv/detail/add_two_ints__rosidl_typesupport_introspection_cpp.hpp
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/environment/pythonpath.sh
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/environment/pythonpath.dsv
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial-0.0.0-py3.12.egg-info/PKG-INFO
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial-0.0.0-py3.12.egg-info/SOURCES.txt
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial-0.0.0-py3.12.egg-info/dependency_links.txt
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial-0.0.0-py3.12.egg-info/top_level.txt
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/__init__.py
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/_interfaces_tutorial_s.ep.rosidl_typesupport_c.c
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/_interfaces_tutorial_s.ep.rosidl_typesupport_fastrtps_c.c
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/_interfaces_tutorial_s.ep.rosidl_typesupport_introspection_c.c
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/action/__init__.py
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/action/_counter.py
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/action/_counter_s.c
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/interfaces_tutorial_s__rosidl_typesupport_c.so
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/interfaces_tutorial_s__rosidl_typesupport_fastrtps_c.so
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/interfaces_tutorial_s__rosidl_typesupport_introspection_c.so
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/msg/__init__.py
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/msg/_num.py
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/msg/_num_s.c
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/msg/_sphere.py
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/msg/_sphere_s.c
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/srv/__init__.py
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/srv/_add_two_ints.py
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/srv/_add_two_ints_s.c
+-- Up-to-date symlink: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/interfaces_tutorial_s__rosidl_typesupport_fastrtps_c.so
+-- Up-to-date symlink: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/interfaces_tutorial_s__rosidl_typesupport_introspection_c.so
+-- Up-to-date symlink: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/interfaces_tutorial_s__rosidl_typesupport_c.so
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/ament_index/resource_index/rust_packages/interfaces_tutorial
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/rust/Cargo.toml
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/rust/build.rs
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/rust/src/action.rs
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/rust/src/action/rmw.rs
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/rust/src/lib.rs
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/rust/src/msg.rs
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/rust/src/msg/rmw.rs
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/rust/src/srv.rs
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/rust/src/srv/rmw.rs
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/msg/Num.idl
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/msg/Sphere.idl
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/srv/AddTwoInts.idl
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/action/Counter.idl
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/msg/Num.msg
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/msg/Sphere.msg
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/srv/AddTwoInts.srv
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/action/Counter.action
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/ament_index/resource_index/package_run_dependencies/interfaces_tutorial
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/ament_index/resource_index/parent_prefix_path/interfaces_tutorial
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/environment/ament_prefix_path.sh
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/environment/ament_prefix_path.dsv
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/environment/path.sh
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/environment/path.dsv
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/local_setup.bash
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/local_setup.sh
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/local_setup.zsh
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/local_setup.dsv
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/package.dsv
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/ament_index/resource_index/packages/interfaces_tutorial
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/rosidl_cmake-extras.cmake
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/ament_cmake_export_dependencies-extras.cmake
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/ament_cmake_export_include_directories-extras.cmake
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/ament_cmake_export_libraries-extras.cmake
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/ament_cmake_export_targets-extras.cmake
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/rosidl_cmake_export_typesupport_targets-extras.cmake
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/interfaces_tutorialConfig.cmake
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/interfaces_tutorialConfig-version.cmake
+-- Symlinking: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/package.xml
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/libinterfaces_tutorial__rosidl_generator_c.so
+-- Set non-toolchain portion of runtime path of "/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/libinterfaces_tutorial__rosidl_generator_c.so" to ""
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/libinterfaces_tutorial__rosidl_typesupport_fastrtps_c.so
+-- Set non-toolchain portion of runtime path of "/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/libinterfaces_tutorial__rosidl_typesupport_fastrtps_c.so" to ""
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/libinterfaces_tutorial__rosidl_typesupport_fastrtps_cpp.so
+-- Set non-toolchain portion of runtime path of "/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/libinterfaces_tutorial__rosidl_typesupport_fastrtps_cpp.so" to ""
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/libinterfaces_tutorial__rosidl_typesupport_introspection_c.so
+-- Set non-toolchain portion of runtime path of "/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/libinterfaces_tutorial__rosidl_typesupport_introspection_c.so" to ""
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/libinterfaces_tutorial__rosidl_typesupport_c.so
+-- Set non-toolchain portion of runtime path of "/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/libinterfaces_tutorial__rosidl_typesupport_c.so" to ""
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/libinterfaces_tutorial__rosidl_typesupport_introspection_cpp.so
+-- Set non-toolchain portion of runtime path of "/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/libinterfaces_tutorial__rosidl_typesupport_introspection_cpp.so" to ""
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/libinterfaces_tutorial__rosidl_typesupport_cpp.so
+-- Set non-toolchain portion of runtime path of "/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/libinterfaces_tutorial__rosidl_typesupport_cpp.so" to ""
+Listing '/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial'...
+Compiling '/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/__init__.py'...
+Listing '/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/action'...
+Compiling '/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/action/__init__.py'...
+Compiling '/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/action/_counter.py'...
+Listing '/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/msg'...
+Compiling '/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/msg/__init__.py'...
+Compiling '/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/msg/_num.py'...
+Compiling '/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/msg/_sphere.py'...
+Listing '/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/srv'...
+Compiling '/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/srv/__init__.py'...
+Compiling '/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/python3.12/site-packages/interfaces_tutorial/srv/_add_two_ints.py'...
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/libinterfaces_tutorial__rosidl_generator_py.so
+-- Set non-toolchain portion of runtime path of "/home/jairls/robot_incendios_ws/install/interfaces_tutorial/lib/libinterfaces_tutorial__rosidl_generator_py.so" to ""
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/export_interfaces_tutorial__rosidl_generator_cExport.cmake
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/export_interfaces_tutorial__rosidl_generator_cExport-noconfig.cmake
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/export_interfaces_tutorial__rosidl_typesupport_fastrtps_cExport.cmake
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/export_interfaces_tutorial__rosidl_typesupport_fastrtps_cExport-noconfig.cmake
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/export_interfaces_tutorial__rosidl_generator_cppExport.cmake
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/export_interfaces_tutorial__rosidl_typesupport_fastrtps_cppExport.cmake
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/export_interfaces_tutorial__rosidl_typesupport_fastrtps_cppExport-noconfig.cmake
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/interfaces_tutorial__rosidl_typesupport_introspection_cExport.cmake
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/interfaces_tutorial__rosidl_typesupport_introspection_cExport-noconfig.cmake
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/interfaces_tutorial__rosidl_typesupport_cExport.cmake
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/interfaces_tutorial__rosidl_typesupport_cExport-noconfig.cmake
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/interfaces_tutorial__rosidl_typesupport_introspection_cppExport.cmake
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/interfaces_tutorial__rosidl_typesupport_introspection_cppExport-noconfig.cmake
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/interfaces_tutorial__rosidl_typesupport_cppExport.cmake
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/interfaces_tutorial__rosidl_typesupport_cppExport-noconfig.cmake
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/export_interfaces_tutorial__rosidl_generator_pyExport.cmake
+-- Installing: /home/jairls/robot_incendios_ws/install/interfaces_tutorial/share/interfaces_tutorial/cmake/export_interfaces_tutorial__rosidl_generator_pyExport-noconfig.cmake

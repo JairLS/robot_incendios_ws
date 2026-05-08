@@ -1,0 +1,42 @@
+running develop
+running egg_info
+creating mecanum_robot_sim.egg-info
+writing mecanum_robot_sim.egg-info/PKG-INFO
+writing dependency_links to mecanum_robot_sim.egg-info/dependency_links.txt
+writing entry points to mecanum_robot_sim.egg-info/entry_points.txt
+writing requirements to mecanum_robot_sim.egg-info/requires.txt
+writing top-level names to mecanum_robot_sim.egg-info/top_level.txt
+writing manifest file 'mecanum_robot_sim.egg-info/SOURCES.txt'
+reading manifest file 'mecanum_robot_sim.egg-info/SOURCES.txt'
+writing manifest file 'mecanum_robot_sim.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/lib/python3.12/site-packages/mecanum-robot-sim.egg-link (link to .)
+Installing ekf_node script to /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/lib/mecanum_robot_sim
+Installing odometry_publisher script to /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/lib/mecanum_robot_sim
+
+Installed /home/jairls/robot_incendios_ws/build/mecanum_robot_sim
+running symlink_data
+creating /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/ament_index
+creating /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/ament_index/resource_index
+creating /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/ament_index/resource_index/packages
+symbolically linking /home/jairls/robot_incendios_ws/build/mecanum_robot_sim/resource/mecanum_robot_sim -> /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/ament_index/resource_index/packages
+symbolically linking /home/jairls/robot_incendios_ws/build/mecanum_robot_sim/package.xml -> /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim
+creating /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim/launch
+symbolically linking /home/jairls/robot_incendios_ws/build/mecanum_robot_sim/launch/robot_launch.py -> /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim/launch
+symbolically linking /home/jairls/robot_incendios_ws/build/mecanum_robot_sim/launch/robot_camera_launch.py -> /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim/launch
+symbolically linking /home/jairls/robot_incendios_ws/build/mecanum_robot_sim/launch/robot_amcl_launch.py -> /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim/launch
+creating /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim/resource
+symbolically linking /home/jairls/robot_incendios_ws/build/mecanum_robot_sim/resource/robot.urdf -> /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim/resource
+symbolically linking /home/jairls/robot_incendios_ws/build/mecanum_robot_sim/resource/robot_camera.urdf -> /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim/resource
+symbolically linking /home/jairls/robot_incendios_ws/build/mecanum_robot_sim/resource/rviz_config.rviz -> /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim/resource
+symbolically linking /home/jairls/robot_incendios_ws/build/mecanum_robot_sim/resource/rviz_camera_config.rviz -> /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim/resource
+symbolically linking /home/jairls/robot_incendios_ws/build/mecanum_robot_sim/resource/ekf_params.yaml -> /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim/resource
+symbolically linking /home/jairls/robot_incendios_ws/build/mecanum_robot_sim/resource/slam_toolbox_params.yaml -> /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim/resource
+symbolically linking /home/jairls/robot_incendios_ws/build/mecanum_robot_sim/resource/cartographer_params.lua -> /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim/resource
+symbolically linking /home/jairls/robot_incendios_ws/build/mecanum_robot_sim/resource/map.yaml -> /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim/resource
+symbolically linking /home/jairls/robot_incendios_ws/build/mecanum_robot_sim/resource/map.pgm -> /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim/resource
+symbolically linking /home/jairls/robot_incendios_ws/build/mecanum_robot_sim/resource/amcl_params.yaml -> /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim/resource
+symbolically linking /home/jairls/robot_incendios_ws/build/mecanum_robot_sim/resource/rviz_amcl_config.rviz -> /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim/resource
+creating /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim/worlds
+symbolically linking /home/jairls/robot_incendios_ws/build/mecanum_robot_sim/worlds/mecanum_robot.wbt -> /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim/worlds
+symbolically linking /home/jairls/robot_incendios_ws/build/mecanum_robot_sim/worlds/mecanum_robot_camera.wbt -> /home/jairls/robot_incendios_ws/install/mecanum_robot_sim/share/mecanum_robot_sim/worlds

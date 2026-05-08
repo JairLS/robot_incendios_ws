@@ -1,0 +1,129 @@
+[0.508s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build']
+[0.508s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=False, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=12, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], cmake_args=None, cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, mixin_files=None, mixin=None, verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0x7950d079ef60>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x7950d079ec60>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x7950d079ec60>>, mixin_verb=('build',))
+[0.655s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.655s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.656s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.656s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.656s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.656s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.657s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/jairls/robot_incendios_ws'
+[0.668s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.669s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.669s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.670s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.670s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.670s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.671s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.671s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.671s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.910s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[0.911s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[0.911s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[0.911s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[0.912s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[0.912s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.913s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[0.914s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[0.915s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.915s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[0.925s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[0.926s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.927s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[0.927s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[0.928s] Level 1:colcon.colcon_core.package_identification:_identify(scr) by extensions ['ignore', 'ignore_ament_install']
+[0.928s] Level 1:colcon.colcon_core.package_identification:_identify(scr) by extension 'ignore'
+[0.929s] Level 1:colcon.colcon_core.package_identification:_identify(scr) by extension 'ignore_ament_install'
+[0.929s] Level 1:colcon.colcon_core.package_identification:_identify(scr) by extensions ['colcon_pkg']
+[0.930s] Level 1:colcon.colcon_core.package_identification:_identify(scr) by extension 'colcon_pkg'
+[0.930s] Level 1:colcon.colcon_core.package_identification:_identify(scr) by extensions ['colcon_meta']
+[0.939s] Level 1:colcon.colcon_core.package_identification:_identify(scr) by extension 'colcon_meta'
+[0.940s] Level 1:colcon.colcon_core.package_identification:_identify(scr) by extensions ['ros']
+[0.940s] Level 1:colcon.colcon_core.package_identification:_identify(scr) by extension 'ros'
+[0.941s] Level 1:colcon.colcon_core.package_identification:_identify(scr) by extensions ['cmake', 'python']
+[0.941s] Level 1:colcon.colcon_core.package_identification:_identify(scr) by extension 'cmake'
+[0.942s] Level 1:colcon.colcon_core.package_identification:_identify(scr) by extension 'python'
+[0.942s] Level 1:colcon.colcon_core.package_identification:_identify(scr) by extensions ['python_setup_py']
+[0.942s] Level 1:colcon.colcon_core.package_identification:_identify(scr) by extension 'python_setup_py'
+[0.943s] Level 1:colcon.colcon_core.package_identification:_identify(scr/robot_incendios) by extensions ['ignore', 'ignore_ament_install']
+[0.943s] Level 1:colcon.colcon_core.package_identification:_identify(scr/robot_incendios) by extension 'ignore'
+[0.943s] Level 1:colcon.colcon_core.package_identification:_identify(scr/robot_incendios) by extension 'ignore_ament_install'
+[0.943s] Level 1:colcon.colcon_core.package_identification:_identify(scr/robot_incendios) by extensions ['colcon_pkg']
+[0.943s] Level 1:colcon.colcon_core.package_identification:_identify(scr/robot_incendios) by extension 'colcon_pkg'
+[0.943s] Level 1:colcon.colcon_core.package_identification:_identify(scr/robot_incendios) by extensions ['colcon_meta']
+[0.943s] Level 1:colcon.colcon_core.package_identification:_identify(scr/robot_incendios) by extension 'colcon_meta'
+[0.943s] Level 1:colcon.colcon_core.package_identification:_identify(scr/robot_incendios) by extensions ['ros']
+[0.943s] Level 1:colcon.colcon_core.package_identification:_identify(scr/robot_incendios) by extension 'ros'
+[0.947s] DEBUG:colcon.colcon_core.package_identification:Package 'scr/robot_incendios' with type 'ros.ament_python' and name 'robot_incendios'
+[0.948s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.948s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.948s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.948s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.948s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.992s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) check parameters
+[0.993s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) discover
+[0.997s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 2 installed packages in /home/jairls/robot_incendios_ws/install
+[1.004s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 443 installed packages in /opt/ros/jazzy
+[1.009s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) using defaults
+[1.113s] Level 5:colcon.colcon_core.verb:set package 'robot_incendios' build argument 'cmake_args' from command line to 'None'
+[1.113s] Level 5:colcon.colcon_core.verb:set package 'robot_incendios' build argument 'cmake_target' from command line to 'None'
+[1.113s] Level 5:colcon.colcon_core.verb:set package 'robot_incendios' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[1.113s] Level 5:colcon.colcon_core.verb:set package 'robot_incendios' build argument 'cmake_clean_cache' from command line to 'False'
+[1.113s] Level 5:colcon.colcon_core.verb:set package 'robot_incendios' build argument 'cmake_clean_first' from command line to 'False'
+[1.113s] Level 5:colcon.colcon_core.verb:set package 'robot_incendios' build argument 'cmake_force_configure' from command line to 'False'
+[1.113s] Level 5:colcon.colcon_core.verb:set package 'robot_incendios' build argument 'ament_cmake_args' from command line to 'None'
+[1.113s] Level 5:colcon.colcon_core.verb:set package 'robot_incendios' build argument 'catkin_cmake_args' from command line to 'None'
+[1.113s] Level 5:colcon.colcon_core.verb:set package 'robot_incendios' build argument 'catkin_skip_building_tests' from command line to 'False'
+[1.113s] DEBUG:colcon.colcon_core.verb:Building package 'robot_incendios' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/jairls/robot_incendios_ws/build/robot_incendios', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/jairls/robot_incendios_ws/install/robot_incendios', 'merge_install': False, 'path': '/home/jairls/robot_incendios_ws/scr/robot_incendios', 'symlink_install': False, 'test_result_base': None}
+[1.113s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[1.117s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[1.118s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/jairls/robot_incendios_ws/scr/robot_incendios' with build type 'ament_python'
+[1.118s] Level 1:colcon.colcon_core.shell:create_environment_hook('robot_incendios', 'ament_prefix_path')
+[1.125s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[1.125s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/jairls/robot_incendios_ws/install/robot_incendios/share/robot_incendios/hook/ament_prefix_path.ps1'
+[1.126s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/jairls/robot_incendios_ws/install/robot_incendios/share/robot_incendios/hook/ament_prefix_path.dsv'
+[1.127s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/jairls/robot_incendios_ws/install/robot_incendios/share/robot_incendios/hook/ament_prefix_path.sh'
+[1.128s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[1.128s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.584s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/jairls/robot_incendios_ws/scr/robot_incendios'
+[1.585s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[1.585s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.716s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/jairls/robot_incendios_ws/scr/robot_incendios': PYTHONPATH=/home/jairls/robot_incendios_ws/build/robot_incendios/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/jairls/robot_incendios_ws/install/robot_incendios/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/robot_incendios build --build-base /home/jairls/robot_incendios_ws/build/robot_incendios/build install --record /home/jairls/robot_incendios_ws/build/robot_incendios/install.log --single-version-externally-managed install_data
+[3.865s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/jairls/robot_incendios_ws/scr/robot_incendios' returned '0': PYTHONPATH=/home/jairls/robot_incendios_ws/build/robot_incendios/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/jairls/robot_incendios_ws/install/robot_incendios/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/robot_incendios build --build-base /home/jairls/robot_incendios_ws/build/robot_incendios/build install --record /home/jairls/robot_incendios_ws/build/robot_incendios/install.log --single-version-externally-managed install_data
+[3.867s] Level 1:colcon.colcon_core.environment:checking '/home/jairls/robot_incendios_ws/install/robot_incendios' for CMake module files
+[3.868s] Level 1:colcon.colcon_core.environment:checking '/home/jairls/robot_incendios_ws/install/robot_incendios' for CMake config files
+[3.869s] Level 1:colcon.colcon_core.environment:checking '/home/jairls/robot_incendios_ws/install/robot_incendios/lib'
+[3.869s] Level 1:colcon.colcon_core.environment:checking '/home/jairls/robot_incendios_ws/install/robot_incendios/bin'
+[3.869s] Level 1:colcon.colcon_core.environment:checking '/home/jairls/robot_incendios_ws/install/robot_incendios/lib/pkgconfig/robot_incendios.pc'
+[3.870s] Level 1:colcon.colcon_core.environment:checking '/home/jairls/robot_incendios_ws/install/robot_incendios/lib/python3.12/site-packages'
+[3.870s] Level 1:colcon.colcon_core.shell:create_environment_hook('robot_incendios', 'pythonpath')
+[3.870s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/jairls/robot_incendios_ws/install/robot_incendios/share/robot_incendios/hook/pythonpath.ps1'
+[3.871s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/jairls/robot_incendios_ws/install/robot_incendios/share/robot_incendios/hook/pythonpath.dsv'
+[3.871s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/jairls/robot_incendios_ws/install/robot_incendios/share/robot_incendios/hook/pythonpath.sh'
+[3.873s] Level 1:colcon.colcon_core.environment:checking '/home/jairls/robot_incendios_ws/install/robot_incendios/bin'
+[3.873s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(robot_incendios)
+[3.873s] INFO:colcon.colcon_core.shell:Creating package script '/home/jairls/robot_incendios_ws/install/robot_incendios/share/robot_incendios/package.ps1'
+[3.875s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/jairls/robot_incendios_ws/install/robot_incendios/share/robot_incendios/package.dsv'
+[3.876s] INFO:colcon.colcon_core.shell:Creating package script '/home/jairls/robot_incendios_ws/install/robot_incendios/share/robot_incendios/package.sh'
+[3.877s] INFO:colcon.colcon_core.shell:Creating package script '/home/jairls/robot_incendios_ws/install/robot_incendios/share/robot_incendios/package.bash'
+[3.878s] INFO:colcon.colcon_core.shell:Creating package script '/home/jairls/robot_incendios_ws/install/robot_incendios/share/robot_incendios/package.zsh'
+[3.880s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/jairls/robot_incendios_ws/install/robot_incendios/share/colcon-core/packages/robot_incendios)
+[3.880s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[3.881s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[3.881s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '0'
+[3.883s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[4.051s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.notify_send': Could not find 'notify-send'
+[4.051s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[4.051s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[4.052s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[4.056s] DEBUG:colcon.colcon_notification.desktop_notification.notify2:Failed to initialize notify2: org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.Notifications was not provided by any .service files
+[4.056s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[4.057s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/jairls/robot_incendios_ws/install/local_setup.ps1'
+[4.059s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/jairls/robot_incendios_ws/install/_local_setup_util_ps1.py'
+[4.062s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/jairls/robot_incendios_ws/install/setup.ps1'
+[4.064s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/jairls/robot_incendios_ws/install/local_setup.sh'
+[4.065s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/jairls/robot_incendios_ws/install/_local_setup_util_sh.py'
+[4.066s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/jairls/robot_incendios_ws/install/setup.sh'
+[4.070s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/jairls/robot_incendios_ws/install/local_setup.bash'
+[4.072s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/jairls/robot_incendios_ws/install/setup.bash'
+[4.074s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/jairls/robot_incendios_ws/install/local_setup.zsh'
+[4.076s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/jairls/robot_incendios_ws/install/setup.zsh'

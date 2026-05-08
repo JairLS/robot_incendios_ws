@@ -1,0 +1,9 @@
+source;share/rosmasterx3_sim/hook/pythonpath.ps1
+source;share/rosmasterx3_sim/hook/pythonpath.dsv
+source;share/rosmasterx3_sim/hook/pythonpath.sh
+source;share/rosmasterx3_sim/hook/ament_prefix_path.ps1
+source;share/rosmasterx3_sim/hook/ament_prefix_path.dsv
+source;share/rosmasterx3_sim/hook/ament_prefix_path.sh
+source;../../build/rosmasterx3_sim/share/rosmasterx3_sim/hook/pythonpath_develop.ps1
+source;../../build/rosmasterx3_sim/share/rosmasterx3_sim/hook/pythonpath_develop.dsv
+source;../../build/rosmasterx3_sim/share/rosmasterx3_sim/hook/pythonpath_develop.sh

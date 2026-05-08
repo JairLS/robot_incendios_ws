@@ -1,0 +1,45 @@
+[4.283s] Invoking command in '/home/jairls/robot_incendios_ws/build/rosmasterx3_sim': PYTHONPATH=/home/jairls/robot_incendios_ws/build/rosmasterx3_sim/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/jairls/robot_incendios_ws/install/rosmasterx3_sim/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/build --no-deps symlink_data
+[5.193s] running develop
+[5.653s] running egg_info
+[5.653s] creating rosmasterx3_sim.egg-info
+[5.713s] writing rosmasterx3_sim.egg-info/PKG-INFO
+[5.713s] writing dependency_links to rosmasterx3_sim.egg-info/dependency_links.txt
+[5.714s] writing entry points to rosmasterx3_sim.egg-info/entry_points.txt
+[5.714s] writing requirements to rosmasterx3_sim.egg-info/requires.txt
+[5.714s] writing top-level names to rosmasterx3_sim.egg-info/top_level.txt
+[5.714s] writing manifest file 'rosmasterx3_sim.egg-info/SOURCES.txt'
+[5.848s] reading manifest file 'rosmasterx3_sim.egg-info/SOURCES.txt'
+[5.848s] writing manifest file 'rosmasterx3_sim.egg-info/SOURCES.txt'
+[5.909s] running build_ext
+[5.909s] Creating /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/lib/python3.12/site-packages/rosmasterx3-sim.egg-link (link to .)
+[5.925s] Installing leader_follower_controller script to /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/lib/rosmasterx3_sim
+[5.927s] 
+[5.927s] Installed /home/jairls/robot_incendios_ws/build/rosmasterx3_sim
+[5.927s] running symlink_data
+[5.927s] creating /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/ament_index
+[5.928s] creating /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/ament_index/resource_index
+[5.930s] creating /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/ament_index/resource_index/packages
+[5.930s] symbolically linking /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/resource/rosmasterx3_sim -> /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/ament_index/resource_index/packages
+[5.939s] symbolically linking /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/package.xml -> /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim
+[5.939s] creating /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/meshes
+[5.940s] symbolically linking /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/meshes/base_link_X3_mod.STL -> /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/meshes
+[5.940s] symbolically linking /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/meshes/laser_link.STL -> /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/meshes
+[5.940s] symbolically linking /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/meshes/camera_link.STL -> /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/meshes
+[5.941s] symbolically linking /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/meshes/front_right_wheel_X3.STL -> /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/meshes
+[5.944s] symbolically linking /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/meshes/front_left_wheel_X3.STL -> /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/meshes
+[5.944s] symbolically linking /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/meshes/back_right_wheel_X3.STL -> /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/meshes
+[5.944s] symbolically linking /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/meshes/back_left_wheel_X3.STL -> /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/meshes
+[5.944s] creating /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/worlds
+[5.955s] symbolically linking /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/worlds/rosmasterx3.wbt -> /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/worlds
+[5.956s] symbolically linking /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/worlds/multi_robot.wbt -> /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/worlds
+[5.970s] creating /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/launch
+[5.970s] symbolically linking /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/launch/rosmaster_launch.py -> /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/launch
+[5.971s] symbolically linking /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/launch/multi_robot_launch.py -> /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/launch
+[5.971s] symbolically linking /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/launch/mrs_launch.py -> /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/launch
+[5.971s] creating /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/resource
+[5.971s] symbolically linking /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/resource/rosmasterx3.urdf -> /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/resource
+[5.977s] symbolically linking /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/resource/slam_toolbox_params.yaml -> /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/resource
+[5.978s] symbolically linking /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/resource/rviz_config.rviz -> /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/resource
+[5.978s] symbolically linking /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/resource/rosmasterx3_multi_robot.urdf -> /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/resource
+[5.979s] symbolically linking /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/resource/rviz_mrs_config.rviz -> /home/jairls/robot_incendios_ws/install/rosmasterx3_sim/share/rosmasterx3_sim/resource
+[6.191s] Invoked command in '/home/jairls/robot_incendios_ws/build/rosmasterx3_sim' returned '0': PYTHONPATH=/home/jairls/robot_incendios_ws/build/rosmasterx3_sim/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/jairls/robot_incendios_ws/install/rosmasterx3_sim/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/jairls/robot_incendios_ws/build/rosmasterx3_sim/build --no-deps symlink_data

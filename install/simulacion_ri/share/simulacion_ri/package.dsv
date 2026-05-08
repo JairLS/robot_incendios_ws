@@ -1,0 +1,11 @@
+source;share/simulacion_ri/hook/cmake_prefix_path.ps1
+source;share/simulacion_ri/hook/cmake_prefix_path.dsv
+source;share/simulacion_ri/hook/cmake_prefix_path.sh
+source;share/simulacion_ri/hook/pythonpath.ps1
+source;share/simulacion_ri/hook/pythonpath.dsv
+source;share/simulacion_ri/hook/pythonpath.sh
+source;share/simulacion_ri/local_setup.bash
+source;share/simulacion_ri/local_setup.dsv
+source;share/simulacion_ri/local_setup.ps1
+source;share/simulacion_ri/local_setup.sh
+source;share/simulacion_ri/local_setup.zsh

@@ -1,0 +1,17 @@
+running develop
+running egg_info
+writing robot_incendios.egg-info/PKG-INFO
+writing dependency_links to robot_incendios.egg-info/dependency_links.txt
+writing entry points to robot_incendios.egg-info/entry_points.txt
+writing requirements to robot_incendios.egg-info/requires.txt
+writing top-level names to robot_incendios.egg-info/top_level.txt
+reading manifest file 'robot_incendios.egg-info/SOURCES.txt'
+writing manifest file 'robot_incendios.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/jairls/robot_incendios_ws/install/robot_incendios/lib/python3.12/site-packages/robot-incendios.egg-link (link to .)
+Installing LiDAR script to /home/jairls/robot_incendios_ws/install/robot_incendios/lib/robot_incendios
+
+Installed /home/jairls/robot_incendios_ws/build/robot_incendios
+running symlink_data
+symbolically linking /home/jairls/robot_incendios_ws/build/robot_incendios/resource/robot_incendios -> /home/jairls/robot_incendios_ws/install/robot_incendios/share/ament_index/resource_index/packages
+symbolically linking /home/jairls/robot_incendios_ws/build/robot_incendios/package.xml -> /home/jairls/robot_incendios_ws/install/robot_incendios/share/robot_incendios

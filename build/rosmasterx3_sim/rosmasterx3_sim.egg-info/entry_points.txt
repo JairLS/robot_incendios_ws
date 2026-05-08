@@ -1,0 +1,2 @@
+[console_scripts]
+leader_follower_controller = rosmasterx3_sim.leader_follower_controller:main

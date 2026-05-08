@@ -1,0 +1,18 @@
+// generated from rosidl_adapter/resource/action.idl.em
+// with input from interfaces_tutorial/action/Counter.action
+// generated code does not contain a copyright notice
+
+
+module interfaces_tutorial {
+  module action {
+    struct Counter_Goal {
+      int32 range;
+    };
+    struct Counter_Result {
+      sequence<int32> sequence;
+    };
+    struct Counter_Feedback {
+      sequence<int32> partial_sequence;
+    };
+  };
+};

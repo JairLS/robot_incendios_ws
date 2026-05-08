@@ -1,0 +1,29 @@
+[4.361s] Invoking command in '/home/jairls/robot_incendios_ws/build/lifecycle_nodes': PYTHONPATH=/home/jairls/robot_incendios_ws/build/lifecycle_nodes/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/jairls/robot_incendios_ws/install/lifecycle_nodes/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/jairls/robot_incendios_ws/build/lifecycle_nodes/build --no-deps symlink_data
+[5.094s] running develop
+[5.595s] running egg_info
+[5.595s] creating lifecycle_nodes.egg-info
+[5.647s] writing lifecycle_nodes.egg-info/PKG-INFO
+[5.649s] writing dependency_links to lifecycle_nodes.egg-info/dependency_links.txt
+[5.653s] writing entry points to lifecycle_nodes.egg-info/entry_points.txt
+[5.653s] writing requirements to lifecycle_nodes.egg-info/requires.txt
+[5.654s] writing top-level names to lifecycle_nodes.egg-info/top_level.txt
+[5.654s] writing manifest file 'lifecycle_nodes.egg-info/SOURCES.txt'
+[5.769s] reading manifest file 'lifecycle_nodes.egg-info/SOURCES.txt'
+[5.777s] writing manifest file 'lifecycle_nodes.egg-info/SOURCES.txt'
+[5.829s] running build_ext
+[5.830s] Creating /home/jairls/robot_incendios_ws/install/lifecycle_nodes/lib/python3.12/site-packages/lifecycle-nodes.egg-link (link to .)
+[5.839s] Installing lifecycle_client script to /home/jairls/robot_incendios_ws/install/lifecycle_nodes/lib/lifecycle_nodes
+[5.840s] Installing listener script to /home/jairls/robot_incendios_ws/install/lifecycle_nodes/lib/lifecycle_nodes
+[5.841s] Installing talker1 script to /home/jairls/robot_incendios_ws/install/lifecycle_nodes/lib/lifecycle_nodes
+[5.841s] Installing talker2 script to /home/jairls/robot_incendios_ws/install/lifecycle_nodes/lib/lifecycle_nodes
+[5.842s] 
+[5.842s] Installed /home/jairls/robot_incendios_ws/build/lifecycle_nodes
+[5.843s] running symlink_data
+[5.843s] creating /home/jairls/robot_incendios_ws/install/lifecycle_nodes/share/ament_index
+[5.843s] creating /home/jairls/robot_incendios_ws/install/lifecycle_nodes/share/ament_index/resource_index
+[5.843s] creating /home/jairls/robot_incendios_ws/install/lifecycle_nodes/share/ament_index/resource_index/packages
+[5.843s] symbolically linking /home/jairls/robot_incendios_ws/build/lifecycle_nodes/resource/lifecycle_nodes -> /home/jairls/robot_incendios_ws/install/lifecycle_nodes/share/ament_index/resource_index/packages
+[5.844s] symbolically linking /home/jairls/robot_incendios_ws/build/lifecycle_nodes/package.xml -> /home/jairls/robot_incendios_ws/install/lifecycle_nodes/share/lifecycle_nodes
+[5.845s] creating /home/jairls/robot_incendios_ws/install/lifecycle_nodes/share/lifecycle_nodes/launch
+[5.858s] symbolically linking /home/jairls/robot_incendios_ws/build/lifecycle_nodes/launch/launch.py -> /home/jairls/robot_incendios_ws/install/lifecycle_nodes/share/lifecycle_nodes/launch
+[6.190s] Invoked command in '/home/jairls/robot_incendios_ws/build/lifecycle_nodes' returned '0': PYTHONPATH=/home/jairls/robot_incendios_ws/build/lifecycle_nodes/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/jairls/robot_incendios_ws/install/lifecycle_nodes/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/jairls/robot_incendios_ws/build/lifecycle_nodes/build --no-deps symlink_data

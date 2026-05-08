@@ -1,0 +1,1 @@
+/home/jairls/robot_incendios_ws/build/interfaces_tutorial/rosidl_typesupport_introspection_c/interfaces_tutorial/msg/rosidl_typesupport_introspection_c__visibility_control.h

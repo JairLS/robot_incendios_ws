@@ -1,0 +1,2 @@
+[console_scripts]
+my_node = my_second_package.my_node:main

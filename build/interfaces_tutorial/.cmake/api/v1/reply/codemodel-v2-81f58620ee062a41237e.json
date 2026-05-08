@@ -1,0 +1,267 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-9c946f5cbc0a400f946c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.20"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						15,
+						16,
+						17,
+						18,
+						19
+					]
+				},
+				{
+					"build" : "interfaces_tutorial__py",
+					"jsonFile" : "directory-interfaces_tutorial__py-3218117069501a364aff.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.20"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "/home/jairls/robot_incendios_ws/build/interfaces_tutorial/interfaces_tutorial__py",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "interfaces_tutorial__rs",
+					"jsonFile" : "directory-interfaces_tutorial__rs-ed7153a7774b1bfb23bd.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.20"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "/home/jairls/robot_incendios_ws/build/interfaces_tutorial/interfaces_tutorial__rs",
+					"targetIndexes" : 
+					[
+						14
+					]
+				}
+			],
+			"name" : "",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2
+					],
+					"name" : "interfaces_tutorial",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ament_cmake_python_build_interfaces_tutorial_egg::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ament_cmake_python_build_interfaces_tutorial_egg-5c49e3f389b26e50f793.json",
+					"name" : "ament_cmake_python_build_interfaces_tutorial_egg",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ament_cmake_python_symlink_interfaces_tutorial::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ament_cmake_python_symlink_interfaces_tutorial-d27f2b7aa005245d6dd0.json",
+					"name" : "ament_cmake_python_symlink_interfaces_tutorial",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "interfaces_tutorial::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-interfaces_tutorial-2653a8a425798540e2ef.json",
+					"name" : "interfaces_tutorial",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "interfaces_tutorial__cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-interfaces_tutorial__cpp-9ff9dea49a960b95eb90.json",
+					"name" : "interfaces_tutorial__cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "interfaces_tutorial__py::@7b347ab3e9f3a5a6b353",
+					"jsonFile" : "target-interfaces_tutorial__py-b630dee0140359b8eaf6.json",
+					"name" : "interfaces_tutorial__py",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "interfaces_tutorial__rosidl_generator_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-interfaces_tutorial__rosidl_generator_c-24d96928c19dee5ab7da.json",
+					"name" : "interfaces_tutorial__rosidl_generator_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "interfaces_tutorial__rosidl_generator_py::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-interfaces_tutorial__rosidl_generator_py-f1acdab144689258ba77.json",
+					"name" : "interfaces_tutorial__rosidl_generator_py",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "interfaces_tutorial__rosidl_generator_type_description::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-interfaces_tutorial__rosidl_generator_type_description-04209aaf0594e44c64cc.json",
+					"name" : "interfaces_tutorial__rosidl_generator_type_description",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "interfaces_tutorial__rosidl_typesupport_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-interfaces_tutorial__rosidl_typesupport_c-3e11e659740b5bab5956.json",
+					"name" : "interfaces_tutorial__rosidl_typesupport_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "interfaces_tutorial__rosidl_typesupport_cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-interfaces_tutorial__rosidl_typesupport_cpp-607d855c6288958d991a.json",
+					"name" : "interfaces_tutorial__rosidl_typesupport_cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "interfaces_tutorial__rosidl_typesupport_fastrtps_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-interfaces_tutorial__rosidl_typesupport_fastrtps_c-4646a72ee39a3e4958ee.json",
+					"name" : "interfaces_tutorial__rosidl_typesupport_fastrtps_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "interfaces_tutorial__rosidl_typesupport_fastrtps_cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-interfaces_tutorial__rosidl_typesupport_fastrtps_cpp-a10da675df389bb657c6.json",
+					"name" : "interfaces_tutorial__rosidl_typesupport_fastrtps_cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "interfaces_tutorial__rosidl_typesupport_introspection_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-interfaces_tutorial__rosidl_typesupport_introspection_c-6f21d212c4fa7c393c24.json",
+					"name" : "interfaces_tutorial__rosidl_typesupport_introspection_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "interfaces_tutorial__rosidl_typesupport_introspection_cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-interfaces_tutorial__rosidl_typesupport_introspection_cpp-2ef4e88296a345d725b4.json",
+					"name" : "interfaces_tutorial__rosidl_typesupport_introspection_cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "interfaces_tutorial__rs::@715ba23200ad3130dae7",
+					"jsonFile" : "target-interfaces_tutorial__rs-966d84f12fa926d52422.json",
+					"name" : "interfaces_tutorial__rs",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "interfaces_tutorial_s__rosidl_typesupport_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-interfaces_tutorial_s__rosidl_typesupport_c-ec8f1507768577457560.json",
+					"name" : "interfaces_tutorial_s__rosidl_typesupport_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "interfaces_tutorial_s__rosidl_typesupport_fastrtps_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-interfaces_tutorial_s__rosidl_typesupport_fastrtps_c-f61c5dd306c36a638f53.json",
+					"name" : "interfaces_tutorial_s__rosidl_typesupport_fastrtps_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "interfaces_tutorial_s__rosidl_typesupport_introspection_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-interfaces_tutorial_s__rosidl_typesupport_introspection_c-45cc63e435ad2852b28b.json",
+					"name" : "interfaces_tutorial_s__rosidl_typesupport_introspection_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "interfaces_tutorial_uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-interfaces_tutorial_uninstall-85f4efcfc2d81460251a.json",
+					"name" : "interfaces_tutorial_uninstall",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-uninstall-55489ff884666d420aec.json",
+					"name" : "uninstall",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/jairls/robot_incendios_ws/build/interfaces_tutorial",
+		"source" : "/home/jairls/robot_incendios_ws/scr/ros2-tutorials-ws/src/interfaces_tutorial"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}

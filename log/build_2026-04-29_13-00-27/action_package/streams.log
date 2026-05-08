@@ -1,0 +1,27 @@
+[4.386s] Invoking command in '/home/jairls/robot_incendios_ws/build/action_package': PYTHONPATH=/home/jairls/robot_incendios_ws/build/action_package/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/jairls/robot_incendios_ws/install/action_package/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/jairls/robot_incendios_ws/build/action_package/build --no-deps symlink_data
+[5.061s] running develop
+[5.424s] running egg_info
+[5.431s] creating action_package.egg-info
+[5.457s] writing action_package.egg-info/PKG-INFO
+[5.459s] writing dependency_links to action_package.egg-info/dependency_links.txt
+[5.459s] writing entry points to action_package.egg-info/entry_points.txt
+[5.460s] writing requirements to action_package.egg-info/requires.txt
+[5.460s] writing top-level names to action_package.egg-info/top_level.txt
+[5.460s] writing manifest file 'action_package.egg-info/SOURCES.txt'
+[5.549s] reading manifest file 'action_package.egg-info/SOURCES.txt'
+[5.553s] writing manifest file 'action_package.egg-info/SOURCES.txt'
+[5.640s] running build_ext
+[5.640s] Creating /home/jairls/robot_incendios_ws/install/action_package/lib/python3.12/site-packages/action-package.egg-link (link to .)
+[5.642s] Installing action script to /home/jairls/robot_incendios_ws/install/action_package/lib/action_package
+[5.649s] Installing adv_action script to /home/jairls/robot_incendios_ws/install/action_package/lib/action_package
+[5.649s] Installing adv_client script to /home/jairls/robot_incendios_ws/install/action_package/lib/action_package
+[5.649s] Installing client script to /home/jairls/robot_incendios_ws/install/action_package/lib/action_package
+[5.649s] 
+[5.650s] Installed /home/jairls/robot_incendios_ws/build/action_package
+[5.650s] running symlink_data
+[5.650s] creating /home/jairls/robot_incendios_ws/install/action_package/share/ament_index
+[5.650s] creating /home/jairls/robot_incendios_ws/install/action_package/share/ament_index/resource_index
+[5.650s] creating /home/jairls/robot_incendios_ws/install/action_package/share/ament_index/resource_index/packages
+[5.651s] symbolically linking /home/jairls/robot_incendios_ws/build/action_package/resource/action_package -> /home/jairls/robot_incendios_ws/install/action_package/share/ament_index/resource_index/packages
+[5.652s] symbolically linking /home/jairls/robot_incendios_ws/build/action_package/package.xml -> /home/jairls/robot_incendios_ws/install/action_package/share/action_package
+[5.879s] Invoked command in '/home/jairls/robot_incendios_ws/build/action_package' returned '0': PYTHONPATH=/home/jairls/robot_incendios_ws/build/action_package/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/jairls/robot_incendios_ws/install/action_package/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/jairls/robot_incendios_ws/build/action_package/build --no-deps symlink_data

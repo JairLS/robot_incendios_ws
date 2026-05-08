@@ -1,0 +1,5 @@
+[console_scripts]
+lifecycle_client = lifecycle_nodes.lifecycle_client:main
+listener = lifecycle_nodes.listener:main
+talker1 = lifecycle_nodes.talker1:main
+talker2 = lifecycle_nodes.talker2:main

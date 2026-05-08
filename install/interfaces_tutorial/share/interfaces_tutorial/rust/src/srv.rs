@@ -1,0 +1,1 @@
+/home/jairls/robot_incendios_ws/build/interfaces_tutorial/rosidl_generator_rs/interfaces_tutorial/rust/src/srv.rs
