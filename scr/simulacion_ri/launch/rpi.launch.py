@@ -33,4 +33,13 @@ def generate_launch_description():
             parameters=[{'use_sim_time': False}],
         ),
 
+        # ── Cámara NoIR ───────────────────────────────────────────────
+        Node(
+            package='simulacion_ri',
+            executable='camera_node',
+            name='camera_node',
+            output='screen',
+            parameters=[{'use_sim_time': False}],
+        ),
+
     ])
