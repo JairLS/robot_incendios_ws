@@ -14,8 +14,10 @@
 /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/config/robot.rviz
 /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/config/joint_names_Ensamblaje_V1.yaml
 /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/config/mapper_params_online_async.yaml
+/home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/launch/laptop.launch.py
 /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/launch/gazebo.launch.py
 /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/launch/slam.launch.py
+/home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/launch/rpi.launch.py
 /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/launch/display.launch
 /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/launch/gazebo.launch
 /home/jairls/robot_incendios_ws/install/simulacion_ri/share/simulacion_ri/launch/display.launch.py
