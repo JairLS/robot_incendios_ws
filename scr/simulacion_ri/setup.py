@@ -32,6 +32,7 @@ setup(
             'robot = simulacion_ri.robot:main',
             'lidar_tf = simulacion_ri.lidar_tf_publisher:main',
             'odom_tf = simulacion_ri.odom_tf_publisher:main',
+            'camera_node = simulacion_ri.camera_node:main',
         ],
     },
 )
