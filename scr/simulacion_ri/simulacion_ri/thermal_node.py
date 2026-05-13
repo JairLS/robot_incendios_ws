@@ -25,13 +25,12 @@ class ThermalNode(Node):
         self.timer = self.create_timer(0.5, self.timer_callback)
 
     def _read_register(self, reg, length):
-        msg_w = smbus2.i2c_msg.write(MLX_ADDR, [(reg >> 8) & 0xFF, reg & 0xFF])
-        msg_r = smbus2.i2c_msg.read(MLX_ADDR, length * 2)
-        self.bus.i2c_rdwr(msg_w, msg_r)
-        data = list(msg_r)
+        self.bus.write_byte_data(MLX_ADDR, reg >> 8, reg & 0xFF)
+        time.sleep(0.01)
         words = []
-        for i in range(0, len(data), 2):
-            word = (data[i] << 8) | data[i+1]
+        for i in range(length):
+            data = self.bus.read_i2c_block_data(MLX_ADDR, 0, 2)
+            word = (data[0] << 8) | data[1]
             if word > 32767:
                 word -= 65536
             words.append(word)
@@ -39,17 +38,29 @@ class ThermalNode(Node):
 
     def _get_frame(self):
         for _ in range(20):
-            status = self._read_register(0x8000, 1)[0]
+            self.bus.write_byte_data(MLX_ADDR, 0x80, 0x00)
+            time.sleep(0.01)
+            data = self.bus.read_i2c_block_data(MLX_ADDR, 0, 2)
+            status = (data[0] << 8) | data[1]
             if status & 0x0008:
                 break
-            time.sleep(0.01)
-        self._read_register(0x8000, 1)
-        return self._read_register(0x0400, 832)
+            time.sleep(0.05)
+        raw = []
+        for i in range(768):
+            reg = 0x0400 + i
+            self.bus.write_byte_data(MLX_ADDR, reg >> 8, reg & 0xFF)
+            time.sleep(0.001)
+            data = self.bus.read_i2c_block_data(MLX_ADDR, 0, 2)
+            word = (data[0] << 8) | data[1]
+            if word > 32767:
+                word -= 65536
+            raw.append(word)
+        return raw
 
     def timer_callback(self):
         try:
             raw = self._get_frame()
-            frame_data = np.array(raw[:768], dtype=np.float32).reshape(24, 32)
+            frame_data = np.array(raw, dtype=np.float32).reshape(24, 32)
             temp_min, temp_max = 15.0, 45.0
             normalized = np.clip((frame_data - temp_min) / (temp_max - temp_min), 0, 1)
             img = (normalized * 255).astype(np.uint8)
