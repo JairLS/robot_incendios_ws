@@ -20,7 +20,8 @@ class ThermalNode(Node):
             depth=1
         )
         self.publisher = self.create_publisher(Image, "/thermal/image_raw", qos)
-        self.bus = smbus2.SMBus(0)
+        self.bus = smbus2.SMBus(1)
+        time.sleep(5.0)  # Espera que cámara NoIR termine de inicializar
         self.get_logger().info("Thermal MLX90640 iniciada")
         self.timer = self.create_timer(0.5, self.timer_callback)
 
@@ -34,7 +35,6 @@ class ThermalNode(Node):
         return word
 
     def _get_frame(self):
-        # Espera datos listos
         for _ in range(50):
             self.bus.write_i2c_block_data(MLX_ADDR, 0x80, [0x00])
             time.sleep(0.02)
@@ -44,7 +44,6 @@ class ThermalNode(Node):
                 break
             time.sleep(0.05)
 
-        # Lee frame
         raw = []
         for i in range(768):
             reg = 0x0400 + i
@@ -56,7 +55,6 @@ class ThermalNode(Node):
                 word -= 65536
             raw.append(word)
 
-        # Limpia el flag de datos listos
         self.bus.write_i2c_block_data(MLX_ADDR, 0x80, [0x30])
         time.sleep(0.01)
 
