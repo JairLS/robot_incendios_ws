@@ -1,6 +1,7 @@
 import os
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch.actions import ExecuteProcess
 from ament_index_python.packages import get_package_share_directory
 
 
@@ -11,9 +12,20 @@ def generate_launch_description():
         'urdf', 'Ensamblaje_URDF_Final.urdf'
     )
     with open(urdf_path, 'r') as f:
-        robot_description = f.read()
+        robot_description = f.read().replace(
+            'package://simulacion_ri/',
+            'http://172.23.254.161:8080/'
+        )
+
+    share_dir = get_package_share_directory('simulacion_ri')
 
     return LaunchDescription([
+
+        # ── Servidor HTTP para meshes ─────────────────────────────────
+        ExecuteProcess(
+            cmd=['python3', '-m', 'http.server', '8080', '--directory', share_dir],
+            output='screen'
+        ),
 
         # ── RPLidar A1M8 ──────────────────────────────────────────────
         Node(
