@@ -24,37 +24,24 @@ class ThermalNode(Node):
         self.get_logger().info("Thermal MLX90640 iniciada")
         self.timer = self.create_timer(0.5, self.timer_callback)
 
-    def _read_register(self, reg, length):
-        self.bus.write_byte_data(MLX_ADDR, reg >> 8, reg & 0xFF)
-        time.sleep(0.01)
-        words = []
-        for i in range(length):
-            data = self.bus.read_i2c_block_data(MLX_ADDR, 0, 2)
-            word = (data[0] << 8) | data[1]
-            if word > 32767:
-                word -= 65536
-            words.append(word)
-        return words
+    def _read_word(self, reg):
+        self.bus.write_i2c_block_data(MLX_ADDR, reg >> 8, [reg & 0xFF])
+        time.sleep(0.001)
+        data = self.bus.read_i2c_block_data(MLX_ADDR, 0, 2)
+        word = (data[0] << 8) | data[1]
+        if word > 32767:
+            word -= 65536
+        return word
 
     def _get_frame(self):
         for _ in range(20):
-            self.bus.write_byte_data(MLX_ADDR, 0x80, 0x00)
-            time.sleep(0.01)
-            data = self.bus.read_i2c_block_data(MLX_ADDR, 0, 2)
-            status = (data[0] << 8) | data[1]
+            status = self._read_word(0x8000)
             if status & 0x0008:
                 break
             time.sleep(0.05)
         raw = []
         for i in range(768):
-            reg = 0x0400 + i
-            self.bus.write_byte_data(MLX_ADDR, reg >> 8, reg & 0xFF)
-            time.sleep(0.001)
-            data = self.bus.read_i2c_block_data(MLX_ADDR, 0, 2)
-            word = (data[0] << 8) | data[1]
-            if word > 32767:
-                word -= 65536
-            raw.append(word)
+            raw.append(self._read_word(0x0400 + i))
         return raw
 
     def timer_callback(self):
