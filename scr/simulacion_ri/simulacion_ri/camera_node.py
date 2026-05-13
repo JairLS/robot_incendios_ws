@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
-from sensor_msgs.msg import Image
+from sensor_msgs.msg import CompressedImage
 import numpy as np
 import time
+import cv2
 from picamera2 import Picamera2
 
 class CameraNode(Node):
 
     def __init__(self):
         super().__init__("camera_node")
-        self.publisher = self.create_publisher(Image, "/image_raw", 10)
+        self.publisher = self.create_publisher(CompressedImage, "/image_raw/compressed", 10)
         self.cam = Picamera2()
         config = self.cam.create_video_configuration(
             main={"size": (640, 480), "format": "RGB888"},
@@ -25,14 +26,13 @@ class CameraNode(Node):
     def timer_callback(self):
         try:
             frame = self.cam.capture_array("main")
-            msg = Image()
+            bgr = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+            _, jpeg = cv2.imencode('.jpg', bgr, [cv2.IMWRITE_JPEG_QUALITY, 80])
+            msg = CompressedImage()
             msg.header.stamp = self.get_clock().now().to_msg()
             msg.header.frame_id = "camera"
-            msg.height = frame.shape[0]
-            msg.width = frame.shape[1]
-            msg.encoding = "rgb8"
-            msg.step = frame.shape[1] * 3
-            msg.data = frame.tobytes()
+            msg.format = "jpeg"
+            msg.data = jpeg.tobytes()
             self.publisher.publish(msg)
         except Exception as e:
             self.get_logger().error(f"Error: {e}")
