@@ -2,6 +2,7 @@
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import CompressedImage
+from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 import time
 import cv2
 from picamera2 import Picamera2
@@ -10,7 +11,12 @@ class CameraNode(Node):
 
     def __init__(self):
         super().__init__("camera_node")
-        self.publisher = self.create_publisher(CompressedImage, "/image_raw/compressed", 10)
+        qos = QoSProfile(
+            reliability=QoSReliabilityPolicy.BEST_EFFORT,
+            history=QoSHistoryPolicy.KEEP_LAST,
+            depth=1
+        )
+        self.publisher = self.create_publisher(CompressedImage, "/image_raw/compressed", qos)
         self.cam = Picamera2()
         config = self.cam.create_video_configuration(
             main={"size": (640, 480), "format": "RGB888"},
