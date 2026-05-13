@@ -33,13 +33,17 @@ def generate_launch_description():
             parameters=[{'use_sim_time': False}],
         ),
 
-        # ── Cámara NoIR ───────────────────────────────────────────────
+        # ── Cámara NoIR (v4l2) ────────────────────────────────────────
         Node(
-            package='simulacion_ri',
-            executable='camera_node',
+            package='v4l2_camera',
+            executable='v4l2_camera_node',
             name='camera_node',
             output='screen',
-            parameters=[{'use_sim_time': False}],
+            parameters=[{
+                'video_device': '/dev/video0',
+                'image_size': [640, 480],
+                'use_sim_time': False,
+            }],
         ),
 
     ])
