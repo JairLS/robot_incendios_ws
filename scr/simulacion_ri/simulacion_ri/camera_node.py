@@ -2,7 +2,6 @@
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import CompressedImage
-import numpy as np
 import time
 import cv2
 from picamera2 import Picamera2
@@ -26,8 +25,7 @@ class CameraNode(Node):
     def timer_callback(self):
         try:
             frame = self.cam.capture_array("main")
-            bgr = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            _, jpeg = cv2.imencode('.jpg', bgr, [cv2.IMWRITE_JPEG_QUALITY, 80])
+            _, jpeg = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 80])
             msg = CompressedImage()
             msg.header.stamp = self.get_clock().now().to_msg()
             msg.header.frame_id = "camera"
