@@ -42,4 +42,13 @@ def generate_launch_description():
             parameters=[{'use_sim_time': False}],
         ),
 
+        # ── Foxglove Bridge ───────────────────────────────────────────
+        Node(
+            package='foxglove_bridge',
+            executable='foxglove_bridge',
+            name='foxglove_bridge',
+            output='screen',
+            parameters=[{'use_sim_time': False}],
+        ),
+
     ])
