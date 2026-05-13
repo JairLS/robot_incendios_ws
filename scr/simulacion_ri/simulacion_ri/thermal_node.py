@@ -26,7 +26,7 @@ class ThermalNode(Node):
 
     def _read_word(self, reg):
         self.bus.write_i2c_block_data(MLX_ADDR, reg >> 8, [reg & 0xFF])
-        time.sleep(0.001)
+        time.sleep(0.005)
         data = self.bus.read_i2c_block_data(MLX_ADDR, 0, 2)
         word = (data[0] << 8) | data[1]
         if word > 32767:
