@@ -26,7 +26,7 @@ class CameraNode(Node):
     def timer_callback(self):
         try:
             frame = self.cam.capture_array("main")
-            bgr = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+            bgr = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             _, jpeg = cv2.imencode('.jpg', bgr, [cv2.IMWRITE_JPEG_QUALITY, 80])
             msg = CompressedImage()
             msg.header.stamp = self.get_clock().now().to_msg()
