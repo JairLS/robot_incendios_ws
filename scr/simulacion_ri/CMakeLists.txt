@@ -18,6 +18,11 @@ install(PROGRAMS
   DESTINATION lib/${PROJECT_NAME}
   RENAME camera_node
 )
+install(PROGRAMS
+  simulacion_ri/thermal_node.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME thermal_node
+)
 install(DIRECTORY
   config launch meshes urdf textures worlds
   DESTINATION share/${PROJECT_NAME}
