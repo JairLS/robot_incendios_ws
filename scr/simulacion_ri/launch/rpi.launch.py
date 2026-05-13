@@ -40,7 +40,7 @@ def generate_launch_description():
             name='camera_node',
             output='screen',
             parameters=[{
-                'video_device': '/dev/video0',
+                'video_device': '/dev/video13',
                 'image_size': [640, 480],
                 'use_sim_time': False,
             }],
