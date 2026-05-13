@@ -34,14 +34,32 @@ class ThermalNode(Node):
         return word
 
     def _get_frame(self):
-        for _ in range(20):
-            status = self._read_word(0x8000)
+        # Espera datos listos
+        for _ in range(50):
+            self.bus.write_i2c_block_data(MLX_ADDR, 0x80, [0x00])
+            time.sleep(0.02)
+            data = self.bus.read_i2c_block_data(MLX_ADDR, 0, 2)
+            status = (data[0] << 8) | data[1]
             if status & 0x0008:
                 break
             time.sleep(0.05)
+
+        # Lee frame
         raw = []
         for i in range(768):
-            raw.append(self._read_word(0x0400 + i))
+            reg = 0x0400 + i
+            self.bus.write_i2c_block_data(MLX_ADDR, reg >> 8, [reg & 0xFF])
+            time.sleep(0.005)
+            data = self.bus.read_i2c_block_data(MLX_ADDR, 0, 2)
+            word = (data[0] << 8) | data[1]
+            if word > 32767:
+                word -= 65536
+            raw.append(word)
+
+        # Limpia el flag de datos listos
+        self.bus.write_i2c_block_data(MLX_ADDR, 0x80, [0x30])
+        time.sleep(0.01)
+
         return raw
 
     def timer_callback(self):
