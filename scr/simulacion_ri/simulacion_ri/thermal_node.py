@@ -20,7 +20,7 @@ class ThermalNode(Node):
             depth=1
         )
         self.publisher = self.create_publisher(Image, "/thermal/image_raw", qos)
-        self.bus = smbus2.SMBus(1)
+        self.bus = smbus2.SMBus(0)
         self.get_logger().info("Thermal MLX90640 iniciada")
         self.timer = self.create_timer(0.5, self.timer_callback)
 
