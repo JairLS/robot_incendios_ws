@@ -9,6 +9,7 @@ import smbus2
 import time
 
 MLX_ADDR = 0x33
+TCA_ADDR = 0x70
 
 class ThermalNode(Node):
 
@@ -21,12 +22,14 @@ class ThermalNode(Node):
         )
         self.publisher = self.create_publisher(Image, "/thermal/image_raw", qos)
         self.bus = smbus2.SMBus(1)
+        self.bus.write_byte(TCA_ADDR, 0x01)  # Activa canal 0 del TCA9548A
         time.sleep(5.0)
         self.get_logger().info("Thermal MLX90640 iniciada")
         self.timer = self.create_timer(0.5, self.timer_callback)
 
     def _get_frame(self):
-        # Espera datos listos
+        self.bus.write_byte(TCA_ADDR, 0x01)  # Mantiene canal 0 activo
+
         for _ in range(50):
             msg_w = smbus2.i2c_msg.write(MLX_ADDR, [0x80, 0x00])
             msg_r = smbus2.i2c_msg.read(MLX_ADDR, 2)
@@ -36,7 +39,6 @@ class ThermalNode(Node):
                 break
             time.sleep(0.05)
 
-        # Lee frame completo
         msg_w = smbus2.i2c_msg.write(MLX_ADDR, [0x04, 0x00])
         msg_r = smbus2.i2c_msg.read(MLX_ADDR, 1536)
         self.bus.i2c_rdwr(msg_w, msg_r)
@@ -48,7 +50,6 @@ class ThermalNode(Node):
                 word -= 65536
             raw.append(word)
 
-        # Limpia flag
         msg_w = smbus2.i2c_msg.write(MLX_ADDR, [0x80, 0x00, 0x00, 0x30])
         self.bus.i2c_rdwr(msg_w)
 
