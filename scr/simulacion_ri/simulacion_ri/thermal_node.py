@@ -27,7 +27,7 @@ class ThermalNode(Node):
         self.get_logger().info("Leyendo EEPROM del MLX90640...")
         self._load_calibration()
         self.get_logger().info("Thermal MLX90640 iniciada")
-        self.timer = self.create_timer(2.0, self.timer_callback)
+        self.timer = self.create_timer(1.5, self.timer_callback)
 
     def _read_words(self, reg, n):
         bus = smbus2.SMBus(BUS_NUM)
