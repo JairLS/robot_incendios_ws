@@ -213,15 +213,25 @@ class ThermalNode(Node):
                 colored = cv2.resize(colored, (320, 240), interpolation=cv2.INTER_CUBIC)
                 colored = cv2.flip(colored, 1)
 
-                max_temp = temps.max()
-                min_temp = temps.min()
                 mean_temp = temps.mean()
 
-                cv2.putText(colored, f"Max: {max_temp:.1f}C", (5, 20),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-                cv2.putText(colored, f"Min: {min_temp:.1f}C", (5, 45),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-                cv2.putText(colored, f"Mean: {mean_temp:.1f}C", (5, 70),
+                # Cuadro en zona mas caliente
+                hot_idx = np.unravel_index(np.argmax(temps), temps.shape)
+                hot_row, hot_col = hot_idx
+                scale_x = 320 / 32
+                scale_y = 240 / 24
+                cx = int((32 - 1 - hot_col) * scale_x + scale_x / 2)
+                cy = int(hot_row * scale_y + scale_y / 2)
+                box_w, box_h = int(scale_x * 3), int(scale_y * 3)
+                cv2.rectangle(colored,
+                              (cx - box_w, cy - box_h),
+                              (cx + box_w, cy + box_h),
+                              (0, 0, 255), 2)
+                cv2.putText(colored, f"{temps.max():.1f}C",
+                            (cx - box_w, cy - box_h - 5),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+
+                cv2.putText(colored, f"Mean: {mean_temp:.1f}C", (5, 20),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
                 msg = Image()
@@ -235,7 +245,7 @@ class ThermalNode(Node):
                 self.publisher.publish(msg)
 
                 self.get_logger().info(
-                    f"To Min={min_temp:.1f}°C Max={max_temp:.1f}°C Mean={mean_temp:.1f}°C"
+                    f"To Min={temps.min():.1f}°C Max={temps.max():.1f}°C Mean={mean_temp:.1f}°C"
                 )
 
             except Exception as e:
