@@ -8,6 +8,7 @@ import cv2
 import smbus2
 import time
 import math
+import threading
 
 MLX_ADDR = 0x33
 BUS_NUM = 23
@@ -27,7 +28,9 @@ class ThermalNode(Node):
         self.get_logger().info("Leyendo EEPROM del MLX90640...")
         self._load_calibration()
         self.get_logger().info("Thermal MLX90640 iniciada")
-        self.timer = self.create_timer(1.5, self.timer_callback)
+        self._running = True
+        self._thread = threading.Thread(target=self._read_loop, daemon=True)
+        self._thread.start()
 
     def _read_words(self, reg, n):
         bus = smbus2.SMBus(BUS_NUM)
@@ -195,44 +198,53 @@ class ThermalNode(Node):
 
         return To.reshape(24, 32)
 
-    def timer_callback(self):
-        try:
-            temps = self._get_temperatures()
-            if temps is None:
-                return
+    def _read_loop(self):
+        while self._running:
+            try:
+                temps = self._get_temperatures()
+                if temps is None:
+                    time.sleep(0.5)
+                    continue
 
-            temp_min, temp_max = 15.0, 45.0
-            normalized = np.clip((temps - temp_min) / (temp_max - temp_min), 0, 1)
-            img = (normalized * 255).astype(np.uint8)
-            colored = cv2.applyColorMap(img, cv2.COLORMAP_INFERNO)
-            colored = cv2.resize(colored, (320, 240), interpolation=cv2.INTER_CUBIC)
+                temp_min, temp_max = 15.0, 45.0
+                normalized = np.clip((temps - temp_min) / (temp_max - temp_min), 0, 1)
+                img = (normalized * 255).astype(np.uint8)
+                colored = cv2.applyColorMap(img, cv2.COLORMAP_INFERNO)
+                colored = cv2.resize(colored, (320, 240), interpolation=cv2.INTER_CUBIC)
+                colored = cv2.flip(colored, 1)
 
-            max_temp = temps.max()
-            min_temp = temps.min()
-            mean_temp = temps.mean()
+                max_temp = temps.max()
+                min_temp = temps.min()
+                mean_temp = temps.mean()
 
-            cv2.putText(colored, f"Max: {max_temp:.1f}C", (5, 20),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-            cv2.putText(colored, f"Min: {min_temp:.1f}C", (5, 45),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-            cv2.putText(colored, f"Mean: {mean_temp:.1f}C", (5, 70),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+                cv2.putText(colored, f"Max: {max_temp:.1f}C", (5, 20),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+                cv2.putText(colored, f"Min: {min_temp:.1f}C", (5, 45),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+                cv2.putText(colored, f"Mean: {mean_temp:.1f}C", (5, 70),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
-            msg = Image()
-            msg.header.stamp = self.get_clock().now().to_msg()
-            msg.header.frame_id = "thermal"
-            msg.height = 240
-            msg.width = 320
-            msg.encoding = "bgr8"
-            msg.step = 320 * 3
-            msg.data = colored.tobytes()
-            self.publisher.publish(msg)
+                msg = Image()
+                msg.header.stamp = self.get_clock().now().to_msg()
+                msg.header.frame_id = "thermal"
+                msg.height = 240
+                msg.width = 320
+                msg.encoding = "bgr8"
+                msg.step = 320 * 3
+                msg.data = colored.tobytes()
+                self.publisher.publish(msg)
 
-            self.get_logger().info(
-                f"To Min={min_temp:.1f}°C Max={max_temp:.1f}°C Mean={mean_temp:.1f}°C"
-            )
-        except Exception as e:
-            self.get_logger().error(f"Error: {e}")
+                self.get_logger().info(
+                    f"To Min={min_temp:.1f}°C Max={max_temp:.1f}°C Mean={mean_temp:.1f}°C"
+                )
+
+            except Exception as e:
+                self.get_logger().error(f"Error: {e}")
+                time.sleep(0.5)
+
+    def destroy_node(self):
+        self._running = False
+        super().destroy_node()
 
 def main(args=None):
     rclpy.init(args=args)
