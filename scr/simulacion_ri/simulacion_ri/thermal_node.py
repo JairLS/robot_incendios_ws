@@ -45,7 +45,13 @@ class ThermalNode(Node):
         return words
 
     def _load_calibration(self):
-        ee = self._read_words(0x2400, 832)
+        ee = None
+        while ee is None:
+            try:
+                ee = self._read_words(0x2400, 832)
+            except Exception:
+                self.get_logger().warn("Reintentando leer EEPROM...")
+                time.sleep(2.0)
         time.sleep(1.0)
 
         def ei(addr): return addr - 0x2400
