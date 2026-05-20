@@ -22,6 +22,8 @@ class ThermalNode(Node):
             depth=1
         )
         self.publisher = self.create_publisher(Image, "/thermal/image_raw", qos)
+        self.get_logger().info("Esperando que cámara NoIR inicialice...")
+        time.sleep(8.0)
         self.get_logger().info("Leyendo EEPROM del MLX90640...")
         self._load_calibration()
         self.get_logger().info("Thermal MLX90640 iniciada")
