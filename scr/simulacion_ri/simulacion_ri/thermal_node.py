@@ -205,7 +205,18 @@ class ThermalNode(Node):
             normalized = np.clip((temps - temp_min) / (temp_max - temp_min), 0, 1)
             img = (normalized * 255).astype(np.uint8)
             colored = cv2.applyColorMap(img, cv2.COLORMAP_INFERNO)
-            colored = cv2.resize(colored, (320, 240))
+            colored = cv2.resize(colored, (320, 240), interpolation=cv2.INTER_CUBIC)
+
+            max_temp = temps.max()
+            min_temp = temps.min()
+            mean_temp = temps.mean()
+
+            cv2.putText(colored, f"Max: {max_temp:.1f}C", (5, 20),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+            cv2.putText(colored, f"Min: {min_temp:.1f}C", (5, 45),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+            cv2.putText(colored, f"Mean: {mean_temp:.1f}C", (5, 70),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
             msg = Image()
             msg.header.stamp = self.get_clock().now().to_msg()
@@ -218,7 +229,7 @@ class ThermalNode(Node):
             self.publisher.publish(msg)
 
             self.get_logger().info(
-                f"To Min={temps.min():.1f}°C Max={temps.max():.1f}°C Mean={temps.mean():.1f}°C"
+                f"To Min={min_temp:.1f}°C Max={max_temp:.1f}°C Mean={mean_temp:.1f}°C"
             )
         except Exception as e:
             self.get_logger().error(f"Error: {e}")
