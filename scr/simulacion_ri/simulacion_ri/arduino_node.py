@@ -6,7 +6,6 @@ import math
 import numpy as np
 import cv2
 import serial
-import smbus2
 
 import rclpy
 from rclpy.node import Node
@@ -23,24 +22,6 @@ T_MIN      = 15.0
 T_MAX      = 45.0
 OUT_W      = 320
 OUT_H      = 240
-BUS_NUM    = 23
-MLX_ADDR   = 0x33
-
-
-def read_words_i2c(reg, n):
-    bus = smbus2.SMBus(BUS_NUM)
-    msg_w = smbus2.i2c_msg.write(MLX_ADDR, [(reg >> 8) & 0xFF, reg & 0xFF])
-    msg_r = smbus2.i2c_msg.read(MLX_ADDR, n * 2)
-    bus.i2c_rdwr(msg_w, msg_r)
-    data = list(msg_r)
-    bus.close()
-    words = []
-    for i in range(0, n * 2, 2):
-        w = (data[i] << 8) | data[i + 1]
-        if w > 32767:
-            w -= 65536
-        words.append(w)
-    return words
 
 
 def extract_calibration(ee):
@@ -165,7 +146,7 @@ def raw_to_celsius(raw, cal, VDD_pix, V_PTAT, V_BE, GAIN_ram):
     if Ta < -40 or Ta > 85:
         return None
 
-    K_gain  = cal['GAIN_cal'] / GAIN_ram
+    K_gain   = cal['GAIN_cal'] / GAIN_ram
     pix_gain = raw * K_gain
     pix_os   = pix_gain - cal['pix_os_ref'] * (1 + cal['KsTa'] * (Ta - 25))
 
@@ -235,9 +216,6 @@ class ArduinoNode(Node):
         self._thermal_aux  = None
         self._thermal_lock = threading.Lock()
 
-        self.get_logger().info('Leyendo EEPROM del MLX90640 por i2c-23...')
-        self._load_calibration()
-
         self.get_logger().info('Esperando reset del Arduino (4s)...')
         time.sleep(4.0)
         try:
@@ -253,20 +231,20 @@ class ArduinoNode(Node):
         self._thread.start()
 
         self.create_timer(0.5, self._publish_thermal)
-        self.get_logger().info('arduino_node listo')
+        self.get_logger().info('arduino_node listo — esperando EEPROM del Arduino...')
 
-    def _load_calibration(self):
-        ee = None
-        while ee is None:
-            try:
-                ee = read_words_i2c(0x2400, 832)
-            except Exception:
-                self.get_logger().warn('Reintentando leer EEPROM...')
-                time.sleep(2.0)
-        time.sleep(1.0)
+    def _handle_eeprom(self, payload):
         try:
-            self.cal = extract_calibration(ee)
-            self.get_logger().info('Calibración EEPROM OK')
+            words = [int(x) for x in payload.split(',') if x]
+        except ValueError:
+            self.get_logger().warn('EEPROM: error parseando')
+            return
+        if len(words) != 832:
+            self.get_logger().warn(f'EEPROM: esperaba 832, recibí {len(words)}')
+            return
+        try:
+            self.cal = extract_calibration(words)
+            self.get_logger().info('Calibración EEPROM del Arduino OK')
         except Exception as e:
             self.get_logger().error(f'Error calibración: {e}')
 
@@ -283,7 +261,9 @@ class ArduinoNode(Node):
             if not line:
                 continue
 
-            if line.startswith('IMU:'):
+            if line.startswith('EEPROM:'):
+                self._handle_eeprom(line[7:])
+            elif line.startswith('IMU:'):
                 self._handle_imu(line[4:])
             elif line.startswith('ODO:'):
                 self._handle_odom(line[4:])
@@ -355,15 +335,10 @@ class ArduinoNode(Node):
         except ValueError:
             return
 
-        if len(values) != 772:
+        if len(values) != 768:
             return
 
-        VDD_pix  = values[0]
-        V_PTAT   = values[1]
-        V_BE     = values[2]
-        GAIN_ram = values[3]
-        arr = np.array(values[4:], dtype=np.float32)
-
+        arr = np.array(values, dtype=np.float32)
         mask = (arr == -9999) | (arr > 10000) | (arr < -5000)
         if np.all(mask):
             return
@@ -371,17 +346,26 @@ class ArduinoNode(Node):
 
         with self._thermal_lock:
             self._thermal_raw = arr
-            self._thermal_aux = (VDD_pix, V_PTAT, V_BE, GAIN_ram)
 
     def _publish_thermal(self):
         with self._thermal_lock:
-            if self._thermal_raw is None or self._thermal_aux is None:
+            if self._thermal_raw is None:
                 return
             raw = self._thermal_raw.copy()
-            VDD_pix, V_PTAT, V_BE, GAIN_ram = self._thermal_aux
 
         if self.cal is None:
+            self.get_logger().warn(
+                'Térmica no disponible — esperando EEPROM del Arduino',
+                throttle_duration_sec=10.0
+            )
             return
+
+        # Usa valores típicos para Ta ya que el Arduino manda solo raw sin auxiliares
+        # Para conversión exacta agregar auxiliares al formato T:
+        VDD_pix  = -12455
+        V_PTAT   = 1618
+        V_BE     = 19226
+        GAIN_ram = 5538
 
         try:
             temps = raw_to_celsius(raw, self.cal, VDD_pix, V_PTAT, V_BE, GAIN_ram)
