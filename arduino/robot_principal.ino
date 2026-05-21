@@ -1,6 +1,15 @@
 #include <Wire.h>
 #include <EnableInterrupt.h>
 
+// ── TCA9548A ─────────────────────────────────────────
+#define TCA_ADDR 0x70
+
+void tcaSelect(uint8_t canal) {
+  Wire.beginTransmission(TCA_ADDR);
+  Wire.write(1 << canal);
+  Wire.endTransmission();
+}
+
 // ── RC ──────────────────────────────────────────────
 const int CH1 = 11, CH2 = 4, CH3 = 12, CH4 = 5;
 
@@ -64,8 +73,20 @@ float bias_gx = 0, bias_gy = 0, bias_gz = 0;
 float yaw_filtro = 0;
 unsigned long t_imu_ant = 0;
 
+// ── MLX90640 ────────────────────────────────────────
+#define MLX_ADDR    0x33
+#define MLX_PIXELS  768
+#define MLX_INTERVAL 250
+
+unsigned long t_mlx_ant    = 0;
+int  mlx_bloque_actual     = 0;
+int  mlx_pixel_count       = 0;
+bool mlx_enviando          = false;
+int16_t mlx_buffer[MLX_PIXELS];
+
 void leerIMU(float &ax, float &ay, float &az,
              float &gx, float &gy, float &gz) {
+  if (!mlx_enviando) tcaSelect(0);
   Wire.beginTransmission(MPU_ADDR);
   Wire.write(0x3B);
   Wire.endTransmission(false);
@@ -88,6 +109,7 @@ void leerIMU(float &ax, float &ay, float &az,
 
 void calibrarIMU() {
   Serial.println("Calibrando IMU...");
+  tcaSelect(0);
   double sx = 0, sy = 0, sz = 0;
   for (int i = 0; i < 2000; i++) {
     Wire.beginTransmission(MPU_ADDR);
@@ -104,24 +126,30 @@ void calibrarIMU() {
   Serial.println("IMU calibrado.");
 }
 
-// ── MLX90640 ────────────────────────────────────────
-#define MLX_ADDR    0x33
-#define MLX_PIXELS  768
-unsigned long t_mlx_ant = 0;
-#define MLX_INTERVAL 250
-
 void mlxInit() {
+  tcaSelect(1);
   Wire.beginTransmission(MLX_ADDR);
   uint8_t err = Wire.endTransmission();
   if (err != 0) {
     Serial.print("MLX no encontrado, error: ");
     Serial.println(err);
-  } else {
-    Serial.println("MLX90640 OK");
+    tcaSelect(0);
+    return;
   }
+  Serial.println("MLX90640 OK");
+
+  // Configurar 4Hz chess mode
+  Wire.beginTransmission(MLX_ADDR);
+  Wire.write(0x80); Wire.write(0x0D);
+  Wire.write(0x19); Wire.write(0x01);
+  Wire.endTransmission();
+  delay(100);
+
+  tcaSelect(0);
 }
 
 void mlxMandarEEPROM() {
+  tcaSelect(1);
   Serial.print("EEPROM:");
   int wordCount = 0;
   for (int bloque = 0; bloque < 52; bloque++) {
@@ -132,8 +160,7 @@ void mlxMandarEEPROM() {
     uint8_t err = Wire.endTransmission(false);
     if (err != 0) {
       for (int i = 0; i < 16; i++) {
-        Serial.print(0);
-        wordCount++;
+        Serial.print(0); wordCount++;
         if (wordCount < 832) Serial.print(",");
       }
       continue;
@@ -141,53 +168,62 @@ void mlxMandarEEPROM() {
     Wire.requestFrom((uint8_t)MLX_ADDR, (uint8_t)32);
     for (int i = 0; i < 16; i++) {
       int16_t w = (int16_t)((Wire.read() << 8) | Wire.read());
-      Serial.print(w);
-      wordCount++;
+      Serial.print(w); wordCount++;
       if (wordCount < 832) Serial.print(",");
     }
   }
   Serial.println();
+  tcaSelect(0);
 }
 
-void mlxLeerYMandar() {
-  Serial.print("T:");
-  int pixelCount = 0;
+void mlxTickNB() {
+  unsigned long ahora = millis();
 
-  for (int bloque = 0; bloque < 48; bloque++) {
-    uint16_t addr = 0x0400 + bloque * 16;
+  if (!mlx_enviando) {
+    if (ahora - t_mlx_ant >= MLX_INTERVAL) {
+      t_mlx_ant         = ahora;
+      mlx_bloque_actual = 0;
+      mlx_pixel_count   = 0;
+      mlx_enviando      = true;
+      tcaSelect(1);
+    }
+    return;
+  }
+
+  if (mlx_bloque_actual < 48) {
+    uint16_t addr = 0x0400 + mlx_bloque_actual * 16;
     Wire.beginTransmission(MLX_ADDR);
     Wire.write(addr >> 8);
     Wire.write(addr & 0xFF);
     uint8_t err = Wire.endTransmission(false);
 
     if (err != 0) {
-      for (int i = 0; i < 16; i++) {
-        Serial.print(-9999);
-        pixelCount++;
-        if (pixelCount < MLX_PIXELS) Serial.print(",");
+      for (int i = 0; i < 16; i++)
+        mlx_buffer[mlx_pixel_count++] = -9999;
+    } else {
+      int recibidos = Wire.requestFrom((uint8_t)MLX_ADDR, (uint8_t)32);
+      if (recibidos < 32) {
+        while (Wire.available()) Wire.read();
+        for (int i = 0; i < 16; i++)
+          mlx_buffer[mlx_pixel_count++] = -9999;
+      } else {
+        for (int i = 0; i < 16; i++)
+          mlx_buffer[mlx_pixel_count++] = (int16_t)((Wire.read() << 8) | Wire.read());
       }
-      continue;
     }
+    mlx_bloque_actual++;
 
-    int recibidos = Wire.requestFrom((uint8_t)MLX_ADDR, (uint8_t)32);
-    if (recibidos < 32) {
-      while (Wire.available()) Wire.read();
-      for (int i = 0; i < 16; i++) {
-        Serial.print(-9999);
-        pixelCount++;
-        if (pixelCount < MLX_PIXELS) Serial.print(",");
+    if (mlx_bloque_actual >= 48) {
+      Serial.print("T:");
+      for (int i = 0; i < MLX_PIXELS; i++) {
+        Serial.print(mlx_buffer[i]);
+        if (i < MLX_PIXELS - 1) Serial.print(",");
       }
-      continue;
-    }
-
-    for (int i = 0; i < 16; i++) {
-      int16_t raw = (int16_t)((Wire.read() << 8) | Wire.read());
-      Serial.print(raw);
-      pixelCount++;
-      if (pixelCount < MLX_PIXELS) Serial.print(",");
+      Serial.println();
+      mlx_enviando = false;
+      tcaSelect(0);
     }
   }
-  Serial.println();
 }
 
 // ── Motores ─────────────────────────────────────────
@@ -208,6 +244,7 @@ void setup() {
   Wire.setClock(400000);
   delay(500);
 
+  tcaSelect(0);
   Wire.beginTransmission(MPU_ADDR);
   Wire.write(0x6B); Wire.write(0x00);
   Wire.endTransmission(); delay(100);
@@ -246,15 +283,12 @@ void setup() {
 }
 
 void loop() {
-  // Comando por Serial
+  unsigned long ahora = millis();
+
   if (Serial.available()) {
     char cmd = Serial.read();
-    if (cmd == 'E') {
-      mlxMandarEEPROM();
-    }
+    if (cmd == 'E') mlxMandarEEPROM();
   }
-
-  unsigned long ahora = millis();
 
   float ax, ay, az, gx, gy, gz;
   leerIMU(ax, ay, az, gx, gy, gz);
@@ -328,8 +362,5 @@ void loop() {
     Serial.println(theta * 180.0f / PI, 1);
   }
 
-  if (ahora - t_mlx_ant >= MLX_INTERVAL) {
-    t_mlx_ant = ahora;
-    mlxLeerYMandar();
-  }
+  mlxTickNB();
 }
