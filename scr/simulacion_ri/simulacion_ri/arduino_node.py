@@ -18,8 +18,6 @@ from tf2_ros import TransformBroadcaster
 
 GRAVITY    = 9.80665
 DEG_TO_RAD = math.pi / 180.0
-T_MIN      = 15.0
-T_MAX      = 45.0
 OUT_W      = 320
 OUT_H      = 240
 
@@ -162,14 +160,17 @@ def raw_to_celsius(raw, cal):
 
 
 def temps_to_image(temps):
-    temps_clamped = np.clip(temps, T_MIN, T_MAX)
-    normalized = (temps_clamped - T_MIN) / (T_MAX - T_MIN)
+    t_min = float(np.percentile(temps, 5))
+    t_max = float(np.percentile(temps, 95))
+    if t_max - t_min < 2.0:
+        t_max = t_min + 2.0
+
+    normalized = np.clip((temps - t_min) / (t_max - t_min), 0, 1)
     gray8   = (normalized * 255).astype(np.uint8)
     colored = cv2.applyColorMap(gray8, cv2.COLORMAP_INFERNO)
     colored = cv2.resize(colored, (OUT_W, OUT_H), interpolation=cv2.INTER_CUBIC)
     colored = cv2.flip(colored, 1)
 
-    # Hotspot usando temps sin clamp para encontrar el pixel más caliente real
     hot_idx          = np.unravel_index(np.argmax(temps), temps.shape)
     hot_row, hot_col = hot_idx
     scale_x = OUT_W / 32
@@ -232,7 +233,7 @@ class ArduinoNode(Node):
         self._thread  = threading.Thread(target=self._serial_reader, daemon=True)
         self._thread.start()
 
-        self.create_timer(0.5,  self._publish_thermal)
+        self.create_timer(0.25, self._publish_thermal)
         self.create_timer(15.0, self._request_eeprom_if_needed)
         self.create_timer(5.0,  self._log_status)
         self.get_logger().info('arduino_node listo — esperando EEPROM del Arduino...')
@@ -384,7 +385,6 @@ class ArduinoNode(Node):
             self.get_logger().warn(f'Error conversión térmica: {e}')
             return
 
-        # Filtra píxeles con temperaturas físicamente imposibles
         temps = np.where((temps < -40) | (temps > 300), np.nan, temps)
         if np.all(np.isnan(temps)):
             return
