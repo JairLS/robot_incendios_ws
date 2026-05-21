@@ -136,17 +136,8 @@ def extract_calibration(ee):
 
 
 def raw_to_celsius(raw, cal, VDD_pix, V_PTAT, V_BE, GAIN_ram):
-    if GAIN_ram == 0:
-        return None
-
-    Vdd = (VDD_pix - cal['Vdd_25']) / cal['Kv_Vdd'] + 3.3
-    V_PTAT_art = (V_PTAT / (V_PTAT * cal['Alpha_PTAT'] + V_BE)) * (1 << 18)
-    Ta = (V_PTAT_art / (1 + cal['Kv_PTAT'] * (Vdd - 3.3)) - cal['PTAT_25']) / cal['Kt_PTAT'] + 25
-
-    if Ta < -40 or Ta > 85:
-        return None
-
-    K_gain   = cal['GAIN_cal'] / GAIN_ram
+    Ta = 25.0
+    K_gain  = 1.0  # sin GAIN_ram real, relativo
     pix_gain = raw * K_gain
     pix_os   = pix_gain - cal['pix_os_ref'] * (1 + cal['KsTa'] * (Ta - 25))
 
@@ -156,9 +147,19 @@ def raw_to_celsius(raw, cal, VDD_pix, V_PTAT, V_BE, GAIN_ram):
     Ta_r = TrK4 - (TrK4 - TaK4)
 
     alpha = np.where(cal['alpha_pix'] == 0, 1e-10, cal['alpha_pix'])
-    Sx    = cal['KsTo2'] * (alpha ** 3 * pix_os + alpha ** 4 * Ta_r) ** 0.25
-    To    = ((pix_os / (alpha * (1 - cal['KsTo2'] * 273.15) + Sx) + Ta_r) ** 0.25) - 273.15
-
+    
+    inner = alpha ** 3 * pix_os + alpha ** 4 * Ta_r
+    inner = np.where(inner < 0, 0, inner)  # evita NaN en raíz
+    
+    Sx = cal['KsTo2'] * inner ** 0.25
+    
+    denom = alpha * (1 - cal['KsTo2'] * 273.15) + Sx
+    denom = np.where(np.abs(denom) < 1e-10, 1e-10, denom)
+    
+    To_4 = pix_os / denom + Ta_r
+    To_4 = np.where(To_4 < 0, 0, To_4)  # evita NaN en raíz
+    
+    To = To_4 ** 0.25 - 273.15
     return To.reshape(24, 32)
 
 

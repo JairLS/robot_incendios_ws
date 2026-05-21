@@ -50,10 +50,12 @@ const float DIST_ENTRE_EJES  = 0.2814;
 // ── Odometría ───────────────────────────────────────
 float x = 0, y = 0, theta = 0;
 long ticks_izq_odo_prev = 0, ticks_der_odo_prev = 0;
+unsigned long t_odo_ant = 0;
 
 // ── Velocidad ───────────────────────────────────────
 unsigned long tiempo_anterior = 0;
 long ticks_izq_anterior = 0, ticks_der_anterior = 0;
+float vel_real_izq = 0, vel_real_der = 0;
 int ch1_filtrado = 0, ch3_filtrado = 0;
 
 // ── IMU ─────────────────────────────────────────────
@@ -117,6 +119,34 @@ void mlxInit() {
   } else {
     Serial.println("MLX90640 OK");
   }
+}
+
+void mlxMandarEEPROM() {
+  Serial.print("EEPROM:");
+  int wordCount = 0;
+  for (int bloque = 0; bloque < 52; bloque++) {
+    uint16_t addr = 0x2400 + bloque * 16;
+    Wire.beginTransmission(MLX_ADDR);
+    Wire.write(addr >> 8);
+    Wire.write(addr & 0xFF);
+    uint8_t err = Wire.endTransmission(false);
+    if (err != 0) {
+      for (int i = 0; i < 16; i++) {
+        Serial.print(0);
+        wordCount++;
+        if (wordCount < 832) Serial.print(",");
+      }
+      continue;
+    }
+    Wire.requestFrom((uint8_t)MLX_ADDR, (uint8_t)32);
+    for (int i = 0; i < 16; i++) {
+      int16_t w = (int16_t)((Wire.read() << 8) | Wire.read());
+      Serial.print(w);
+      wordCount++;
+      if (wordCount < 832) Serial.print(",");
+    }
+  }
+  Serial.println();
 }
 
 void mlxLeerYMandar() {
@@ -194,6 +224,7 @@ void setup() {
   calibrarIMU();
 
   mlxInit();
+  mlxMandarEEPROM();
 
   pinMode(CH1, INPUT); enableInterrupt(CH1, isr_ch1, CHANGE);
   pinMode(CH3, INPUT); enableInterrupt(CH3, isr_ch3, CHANGE);
@@ -210,11 +241,19 @@ void setup() {
   enableInterrupt(ENC_FR_A, contarFR, RISING);
   enableInterrupt(ENC_RR_A, contarRR, RISING);
 
-  t_imu_ant = t_mlx_ant = tiempo_anterior = millis();
+  t_imu_ant = t_odo_ant = t_mlx_ant = tiempo_anterior = millis();
   Serial.println("=== ROBOT LISTO ===");
 }
 
 void loop() {
+  // Comando por Serial
+  if (Serial.available()) {
+    char cmd = Serial.read();
+    if (cmd == 'E') {
+      mlxMandarEEPROM();
+    }
+  }
+
   unsigned long ahora = millis();
 
   float ax, ay, az, gx, gy, gz;
@@ -246,6 +285,11 @@ void loop() {
   if (ahora - tiempo_anterior >= 100) {
     float dt = (ahora - tiempo_anterior) / 1000.0f;
     tiempo_anterior = ahora;
+
+    vel_real_izq = (ticks_izq - ticks_izq_anterior) / dt;
+    vel_real_der = (ticks_der - ticks_der_anterior) / dt;
+    ticks_izq_anterior = ticks_izq;
+    ticks_der_anterior = ticks_der;
 
     noInterrupts();
     long d_izq = ticks_izq - ticks_izq_odo_prev;
