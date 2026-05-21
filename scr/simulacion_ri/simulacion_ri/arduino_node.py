@@ -361,7 +361,7 @@ class ArduinoNode(Node):
             return
 
         arr = np.array(values, dtype=np.float32)
-        mask = (arr == -9999) | (arr > 3000) | (arr < -3000)
+        mask = (arr == -9999) | (arr > 1500) | (arr < -1500)
         if np.all(mask):
             return
         arr[mask] = float(np.mean(arr[~mask]))
