@@ -1,28 +1,12 @@
 #!/usr/bin/env python3
-"""
-arduino_node.py
-Lee Serial del Arduino Mega (/dev/arduino) y publica:
-  - /thermal/image_raw  (sensor_msgs/Image, bgr8)
-  - /odom               (nav_msgs/Odometry)
-  - /imu                (sensor_msgs/Imu)
-  - TF odom -> base_link
-
-Conversión raw->°C: EEPROM leída UNA VEZ al inicio por i2c-23 (TCA9548A canal 0).
-Formato Serial esperado del Arduino:
-  ENC:ticks_izq,ticks_der
-  IMU:ax,ay,az,gx,gy,gz        (ax/ay/az en g, gx/gy/gz en °/s)
-  ODO:x,y,theta                (theta en grados)
-  T:VDD_pix,V_PTAT,V_BE,GAIN_ram,raw0,...,raw767
-"""
-
 import time
 import threading
 import math
 
 import numpy as np
 import cv2
-import smbus2
 import serial
+import smbus2
 
 import rclpy
 from rclpy.node import Node
@@ -33,51 +17,38 @@ from nav_msgs.msg import Odometry
 from geometry_msgs.msg import TransformStamped, Quaternion
 from tf2_ros import TransformBroadcaster
 
-
-# ─────────────────────────────────────────────
-#  Constantes
-# ─────────────────────────────────────────────
-MLX_ADDR     = 0x33
-MLX_I2C_BUS  = 23
-EEPROM_START = 0x2400
-GRAVITY      = 9.80665
-DEG_TO_RAD   = math.pi / 180.0
-
-T_MIN = 15.0
-T_MAX = 45.0
-OUT_W = 320
-OUT_H = 240
+GRAVITY    = 9.80665
+DEG_TO_RAD = math.pi / 180.0
+T_MIN      = 15.0
+T_MAX      = 45.0
+OUT_W      = 320
+OUT_H      = 240
+BUS_NUM    = 23
+MLX_ADDR   = 0x33
 
 
-# ─────────────────────────────────────────────
-#  Lectura EEPROM
-# ─────────────────────────────────────────────
-def read_eeprom(bus_num, addr):
-    bus = smbus2.SMBus(bus_num)
-    words = []
-    for start in range(EEPROM_START, EEPROM_START + 832, 32):
-        msg_w = smbus2.i2c_msg.write(addr, [(start >> 8) & 0xFF, start & 0xFF])
-        msg_r = smbus2.i2c_msg.read(addr, 64)
-        bus.i2c_rdwr(msg_w, msg_r)
-        data = list(msg_r)
-        for i in range(0, 64, 2):
-            w = (data[i] << 8) | data[i + 1]
-            if w > 32767:
-                w -= 65536
-            words.append(w)
+def read_words_i2c(reg, n):
+    bus = smbus2.SMBus(BUS_NUM)
+    msg_w = smbus2.i2c_msg.write(MLX_ADDR, [(reg >> 8) & 0xFF, reg & 0xFF])
+    msg_r = smbus2.i2c_msg.read(MLX_ADDR, n * 2)
+    bus.i2c_rdwr(msg_w, msg_r)
+    data = list(msg_r)
     bus.close()
+    words = []
+    for i in range(0, n * 2, 2):
+        w = (data[i] << 8) | data[i + 1]
+        if w > 32767:
+            w -= 65536
+        words.append(w)
     return words
 
 
 def extract_calibration(ee):
-    def ei(addr):
-        return addr - 0x2400
-
+    def ei(addr): return addr - 0x2400
     c = {}
 
     c['GAIN_cal'] = ee[ei(0x2430)]
-    if c['GAIN_cal'] > 32767:
-        c['GAIN_cal'] -= 65536
+    if c['GAIN_cal'] > 32767: c['GAIN_cal'] -= 65536
 
     kv_ptat_ee = (ee[ei(0x2432)] & 0xFC00) >> 10
     if kv_ptat_ee > 31: kv_ptat_ee -= 64
@@ -183,9 +154,6 @@ def extract_calibration(ee):
     return c
 
 
-# ─────────────────────────────────────────────
-#  Conversión raw -> °C
-# ─────────────────────────────────────────────
 def raw_to_celsius(raw, cal, VDD_pix, V_PTAT, V_BE, GAIN_ram):
     if GAIN_ram == 0:
         return None
@@ -197,7 +165,7 @@ def raw_to_celsius(raw, cal, VDD_pix, V_PTAT, V_BE, GAIN_ram):
     if Ta < -40 or Ta > 85:
         return None
 
-    K_gain   = cal['GAIN_cal'] / GAIN_ram
+    K_gain  = cal['GAIN_cal'] / GAIN_ram
     pix_gain = raw * K_gain
     pix_os   = pix_gain - cal['pix_os_ref'] * (1 + cal['KsTa'] * (Ta - 25))
 
@@ -213,19 +181,17 @@ def raw_to_celsius(raw, cal, VDD_pix, V_PTAT, V_BE, GAIN_ram):
     return To.reshape(24, 32)
 
 
-# ─────────────────────────────────────────────
-#  Imagen térmica BGR
-# ─────────────────────────────────────────────
 def temps_to_image(temps):
     normalized = np.clip((temps - T_MIN) / (T_MAX - T_MIN), 0, 1)
-    gray8   = (normalized * 255).astype(np.uint8)
-    colored = cv2.applyColorMap(gray8, cv2.COLORMAP_INFERNO)
-    colored = cv2.resize(colored, (OUT_W, OUT_H), interpolation=cv2.INTER_CUBIC)
-    colored = cv2.flip(colored, 1)
+    gray8      = (normalized * 255).astype(np.uint8)
+    colored    = cv2.applyColorMap(gray8, cv2.COLORMAP_INFERNO)
+    colored    = cv2.resize(colored, (OUT_W, OUT_H), interpolation=cv2.INTER_CUBIC)
+    colored    = cv2.flip(colored, 1)
 
-    hot_idx      = np.unravel_index(np.argmax(temps), temps.shape)
+    hot_idx          = np.unravel_index(np.argmax(temps), temps.shape)
     hot_row, hot_col = hot_idx
-    scale_x, scale_y = OUT_W / 32, OUT_H / 24
+    scale_x = OUT_W / 32
+    scale_y = OUT_H / 24
     cx = int((32 - 1 - hot_col) * scale_x + scale_x / 2)
     cy = int(hot_row * scale_y + scale_y / 2)
     bw = int(scale_x * 3)
@@ -236,7 +202,6 @@ def temps_to_image(temps):
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
     cv2.putText(colored, f"Mean: {temps.mean():.1f}C", (5, 20),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-
     return colored
 
 
@@ -249,9 +214,6 @@ def euler_to_quaternion(yaw):
     return q
 
 
-# ─────────────────────────────────────────────
-#  Nodo principal
-# ─────────────────────────────────────────────
 class ArduinoNode(Node):
 
     def __init__(self):
@@ -268,12 +230,13 @@ class ArduinoNode(Node):
         self.pub_imu     = self.create_publisher(Imu,      '/imu',               10)
         self.tf_br       = TransformBroadcaster(self)
 
-        self.cal = None
-        self._load_eeprom()
-
-        self._thermal_raw  = []
+        self.cal           = None
+        self._thermal_raw  = None
         self._thermal_aux  = None
         self._thermal_lock = threading.Lock()
+
+        self.get_logger().info('Leyendo EEPROM del MLX90640 por i2c-23...')
+        self._load_calibration()
 
         self.get_logger().info('Esperando reset del Arduino (4s)...')
         time.sleep(4.0)
@@ -290,26 +253,23 @@ class ArduinoNode(Node):
         self._thread.start()
 
         self.create_timer(0.5, self._publish_thermal)
-        self.get_logger().info('arduino_node iniciado')
+        self.get_logger().info('arduino_node listo')
 
-    # ── EEPROM ────────────────────────────────
-    def _load_eeprom(self):
-        self.get_logger().info(f'Leyendo EEPROM MLX90640 en i2c-{MLX_I2C_BUS}...')
+    def _load_calibration(self):
         ee = None
         while ee is None:
             try:
-                ee = read_eeprom(MLX_I2C_BUS, MLX_ADDR)
-            except Exception as e:
-                self.get_logger().warn(f'Reintentando EEPROM: {e}')
+                ee = read_words_i2c(0x2400, 832)
+            except Exception:
+                self.get_logger().warn('Reintentando leer EEPROM...')
                 time.sleep(2.0)
+        time.sleep(1.0)
         try:
             self.cal = extract_calibration(ee)
             self.get_logger().info('Calibración EEPROM OK')
         except Exception as e:
             self.get_logger().error(f'Error calibración: {e}')
-            self.cal = None
 
-    # ── Lector Serial ─────────────────────────
     def _serial_reader(self):
         while self._running:
             if self.ser is None:
@@ -322,16 +282,14 @@ class ArduinoNode(Node):
                 continue
             if not line:
                 continue
-            if line.startswith('ENC:'):
-                pass
-            elif line.startswith('IMU:'):
+
+            if line.startswith('IMU:'):
                 self._handle_imu(line[4:])
             elif line.startswith('ODO:'):
                 self._handle_odom(line[4:])
             elif line.startswith('T:'):
                 self._handle_thermal(line[2:])
 
-    # ── IMU ───────────────────────────────────
     def _handle_imu(self, payload):
         try:
             parts = [float(x) for x in payload.split(',')]
@@ -344,24 +302,17 @@ class ArduinoNode(Node):
         msg = Imu()
         msg.header.stamp    = self.get_clock().now().to_msg()
         msg.header.frame_id = 'imu_link'
-
-        # g -> m/s²
         msg.linear_acceleration.x = ax_g * GRAVITY
         msg.linear_acceleration.y = ay_g * GRAVITY
         msg.linear_acceleration.z = az_g * GRAVITY
-
-        # °/s -> rad/s
         msg.angular_velocity.x = gx_ds * DEG_TO_RAD
         msg.angular_velocity.y = gy_ds * DEG_TO_RAD
         msg.angular_velocity.z = gz_ds * DEG_TO_RAD
-
         msg.orientation_covariance[0]         = -1.0
         msg.angular_velocity_covariance[0]    = 1e-6
         msg.linear_acceleration_covariance[0] = 1e-6
-
         self.pub_imu.publish(msg)
 
-    # ── Odometría ─────────────────────────────
     def _handle_odom(self, payload):
         try:
             parts = [float(x) for x in payload.split(',')]
@@ -398,17 +349,19 @@ class ArduinoNode(Node):
         tf.transform.rotation      = q
         self.tf_br.sendTransform(tf)
 
-    # ── Térmica ───────────────────────────────
     def _handle_thermal(self, payload):
         try:
-            values = [int(x) for x in payload.split(',')]
+            values = [int(x) for x in payload.split(',') if x]
         except ValueError:
             return
 
         if len(values) != 772:
             return
 
-        VDD_pix, V_PTAT, V_BE, GAIN_ram = values[:4]
+        VDD_pix  = values[0]
+        V_PTAT   = values[1]
+        V_BE     = values[2]
+        GAIN_ram = values[3]
         arr = np.array(values[4:], dtype=np.float32)
 
         mask = (arr == -9999) | (arr > 10000) | (arr < -5000)
@@ -420,12 +373,11 @@ class ArduinoNode(Node):
             self._thermal_raw = arr
             self._thermal_aux = (VDD_pix, V_PTAT, V_BE, GAIN_ram)
 
-    # ── Publicar imagen térmica (2 Hz) ────────
     def _publish_thermal(self):
         with self._thermal_lock:
-            if len(self._thermal_raw) != 768 or self._thermal_aux is None:
+            if self._thermal_raw is None or self._thermal_aux is None:
                 return
-            raw = np.array(self._thermal_raw, dtype=np.float32)
+            raw = self._thermal_raw.copy()
             VDD_pix, V_PTAT, V_BE, GAIN_ram = self._thermal_aux
 
         if self.cal is None:
@@ -438,6 +390,10 @@ class ArduinoNode(Node):
             return
 
         if temps is None:
+            return
+
+        valid = temps[(temps > -40) & (temps < 300)]
+        if len(valid) == 0:
             return
 
         img_bgr = temps_to_image(temps)
@@ -457,7 +413,6 @@ class ArduinoNode(Node):
             f'Thermal Min={temps.min():.1f} Max={temps.max():.1f} Mean={temps.mean():.1f}C'
         )
 
-    # ── Cleanup ───────────────────────────────
     def destroy_node(self):
         self._running = False
         if self.ser and self.ser.is_open:
