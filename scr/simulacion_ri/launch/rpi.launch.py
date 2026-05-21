@@ -66,10 +66,8 @@ def generate_launch_description():
         # ── Cámara Térmica MLX90640 ───────────────────────────────────
         Node(
             package='simulacion_ri',
-            executable='thermal_node',
-            name='thermal_node',
-            output='screen',
-            parameters=[{'use_sim_time': False}],
+            executable='arduino_node',
+            name='arduino_node',
         ),
 
         # ── Robot State Publisher ─────────────────────────────────────

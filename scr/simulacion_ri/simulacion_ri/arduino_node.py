@@ -1,0 +1,481 @@
+#!/usr/bin/env python3
+"""
+arduino_node.py
+Lee Serial del Arduino Mega (/dev/arduino) y publica:
+  - /thermal/image_raw  (sensor_msgs/Image, bgr8)
+  - /odom               (nav_msgs/Odometry)
+  - /imu                (sensor_msgs/Imu)
+  - TF odom -> base_link
+
+Conversión raw->°C: EEPROM leída UNA VEZ al inicio por i2c-23 (TCA9548A canal 0).
+Formato Serial esperado del Arduino:
+  ENC:ticks_izq,ticks_der
+  IMU:ax,ay,az,gx,gy,gz        (ax/ay/az en g, gx/gy/gz en °/s)
+  ODO:x,y,theta                (theta en grados)
+  T:VDD_pix,V_PTAT,V_BE,GAIN_ram,raw0,...,raw767
+"""
+
+import time
+import threading
+import math
+
+import numpy as np
+import cv2
+import smbus2
+import serial
+
+import rclpy
+from rclpy.node import Node
+from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
+
+from sensor_msgs.msg import Image, Imu
+from nav_msgs.msg import Odometry
+from geometry_msgs.msg import TransformStamped, Quaternion
+from tf2_ros import TransformBroadcaster
+
+
+# ─────────────────────────────────────────────
+#  Constantes
+# ─────────────────────────────────────────────
+MLX_ADDR     = 0x33
+MLX_I2C_BUS  = 23
+EEPROM_START = 0x2400
+GRAVITY      = 9.80665
+DEG_TO_RAD   = math.pi / 180.0
+
+T_MIN = 15.0
+T_MAX = 45.0
+OUT_W = 320
+OUT_H = 240
+
+
+# ─────────────────────────────────────────────
+#  Lectura EEPROM
+# ─────────────────────────────────────────────
+def read_eeprom(bus_num, addr):
+    bus = smbus2.SMBus(bus_num)
+    words = []
+    for start in range(EEPROM_START, EEPROM_START + 832, 32):
+        msg_w = smbus2.i2c_msg.write(addr, [(start >> 8) & 0xFF, start & 0xFF])
+        msg_r = smbus2.i2c_msg.read(addr, 64)
+        bus.i2c_rdwr(msg_w, msg_r)
+        data = list(msg_r)
+        for i in range(0, 64, 2):
+            w = (data[i] << 8) | data[i + 1]
+            if w > 32767:
+                w -= 65536
+            words.append(w)
+    bus.close()
+    return words
+
+
+def extract_calibration(ee):
+    def ei(addr):
+        return addr - 0x2400
+
+    c = {}
+
+    c['GAIN_cal'] = ee[ei(0x2430)]
+    if c['GAIN_cal'] > 32767:
+        c['GAIN_cal'] -= 65536
+
+    kv_ptat_ee = (ee[ei(0x2432)] & 0xFC00) >> 10
+    if kv_ptat_ee > 31: kv_ptat_ee -= 64
+    c['Kv_PTAT'] = kv_ptat_ee / 4096.0
+
+    kt_ptat_ee = ee[ei(0x2432)] & 0x03FF
+    if kt_ptat_ee > 511: kt_ptat_ee -= 1024
+    c['Kt_PTAT'] = kt_ptat_ee / 8.0
+
+    c['PTAT_25'] = ee[ei(0x2431)]
+    if c['PTAT_25'] > 32767: c['PTAT_25'] -= 65536
+
+    alpha_ptat_ee = (ee[ei(0x2410)] & 0xF000) >> 12
+    c['Alpha_PTAT'] = alpha_ptat_ee / 4.0 + 8.0
+
+    kv_vdd_ee = (ee[ei(0x2433)] & 0xFF00) >> 8
+    if kv_vdd_ee > 127: kv_vdd_ee -= 256
+    c['Kv_Vdd'] = kv_vdd_ee * 32
+
+    vdd25_ee = ee[ei(0x2433)] & 0x00FF
+    c['Vdd_25'] = (vdd25_ee - 256) * 32 - (1 << 13)
+
+    Offset_avg = ee[ei(0x2411)]
+    if Offset_avg > 32767: Offset_avg -= 65536
+
+    scale_occ_rem = ee[ei(0x2410)] & 0x000F
+    scale_occ_col = (ee[ei(0x2410)] & 0x00F0) >> 4
+    scale_occ_row = (ee[ei(0x2410)] & 0x0F00) >> 8
+
+    occ_rows = []
+    for i in range(6):
+        word = ee[ei(0x2412) + i]
+        for j in range(4):
+            v = (word >> (j * 4)) & 0xF
+            if v > 7: v -= 16
+            occ_rows.append(v)
+
+    occ_cols = []
+    for i in range(8):
+        word = ee[ei(0x2418) + i]
+        for j in range(4):
+            v = (word >> (j * 4)) & 0xF
+            if v > 7: v -= 16
+            occ_cols.append(v)
+
+    pix_os_ref = np.zeros(768)
+    for i in range(768):
+        row = i // 32
+        col = i % 32
+        pix_ee = ee[ei(0x2440) + i]
+        pix_offset = (pix_ee & 0xFC00) >> 10
+        if pix_offset > 31: pix_offset -= 64
+        pix_os_ref[i] = (Offset_avg +
+                         occ_rows[row] * (1 << scale_occ_row) +
+                         occ_cols[col] * (1 << scale_occ_col) +
+                         pix_offset * (1 << scale_occ_rem))
+    c['pix_os_ref'] = pix_os_ref
+
+    alpha_ref = ee[ei(0x2421)]
+    alpha_scale = ((ee[ei(0x2420)] & 0xF000) >> 12) + 30
+    scale_acc_rem = ee[ei(0x2420)] & 0x000F
+    scale_acc_col = (ee[ei(0x2420)] & 0x00F0) >> 4
+    scale_acc_row = (ee[ei(0x2420)] & 0x0F00) >> 8
+
+    acc_rows = []
+    for i in range(6):
+        word = ee[ei(0x2422) + i]
+        for j in range(4):
+            v = (word >> (j * 4)) & 0xF
+            if v > 7: v -= 16
+            acc_rows.append(v)
+
+    acc_cols = []
+    for i in range(8):
+        word = ee[ei(0x2428) + i]
+        for j in range(4):
+            v = (word >> (j * 4)) & 0xF
+            if v > 7: v -= 16
+            acc_cols.append(v)
+
+    alpha_pix = np.zeros(768)
+    for i in range(768):
+        row = i // 32
+        col = i % 32
+        pix_ee = ee[ei(0x2440) + i]
+        a_pix = (pix_ee & 0x03F0) >> 4
+        if a_pix > 31: a_pix -= 64
+        alpha_pix[i] = (alpha_ref +
+                        acc_rows[row] * (1 << scale_acc_row) +
+                        acc_cols[col] * (1 << scale_acc_col) +
+                        a_pix * (1 << scale_acc_rem)) / (1 << alpha_scale)
+    c['alpha_pix'] = alpha_pix
+
+    ksta_ee = (ee[ei(0x243C)] & 0xFF00) >> 8
+    if ksta_ee > 127: ksta_ee -= 256
+    c['KsTa'] = ksta_ee / (1 << 13)
+
+    ksTo_scale = (ee[ei(0x243F)] & 0x000F) + 8
+    ksTo2_ee = (ee[ei(0x243D)] & 0xFF00) >> 8
+    if ksTo2_ee > 127: ksTo2_ee -= 256
+    c['KsTo2'] = ksTo2_ee / (1 << ksTo_scale)
+
+    return c
+
+
+# ─────────────────────────────────────────────
+#  Conversión raw -> °C
+# ─────────────────────────────────────────────
+def raw_to_celsius(raw, cal, VDD_pix, V_PTAT, V_BE, GAIN_ram):
+    if GAIN_ram == 0:
+        return None
+
+    Vdd = (VDD_pix - cal['Vdd_25']) / cal['Kv_Vdd'] + 3.3
+    V_PTAT_art = (V_PTAT / (V_PTAT * cal['Alpha_PTAT'] + V_BE)) * (1 << 18)
+    Ta = (V_PTAT_art / (1 + cal['Kv_PTAT'] * (Vdd - 3.3)) - cal['PTAT_25']) / cal['Kt_PTAT'] + 25
+
+    if Ta < -40 or Ta > 85:
+        return None
+
+    K_gain   = cal['GAIN_cal'] / GAIN_ram
+    pix_gain = raw * K_gain
+    pix_os   = pix_gain - cal['pix_os_ref'] * (1 + cal['KsTa'] * (Ta - 25))
+
+    Tr   = Ta - 8
+    TaK4 = (Ta + 273.15) ** 4
+    TrK4 = (Tr + 273.15) ** 4
+    Ta_r = TrK4 - (TrK4 - TaK4)
+
+    alpha = np.where(cal['alpha_pix'] == 0, 1e-10, cal['alpha_pix'])
+    Sx    = cal['KsTo2'] * (alpha ** 3 * pix_os + alpha ** 4 * Ta_r) ** 0.25
+    To    = ((pix_os / (alpha * (1 - cal['KsTo2'] * 273.15) + Sx) + Ta_r) ** 0.25) - 273.15
+
+    return To.reshape(24, 32)
+
+
+# ─────────────────────────────────────────────
+#  Imagen térmica BGR
+# ─────────────────────────────────────────────
+def temps_to_image(temps):
+    normalized = np.clip((temps - T_MIN) / (T_MAX - T_MIN), 0, 1)
+    gray8   = (normalized * 255).astype(np.uint8)
+    colored = cv2.applyColorMap(gray8, cv2.COLORMAP_INFERNO)
+    colored = cv2.resize(colored, (OUT_W, OUT_H), interpolation=cv2.INTER_CUBIC)
+    colored = cv2.flip(colored, 1)
+
+    hot_idx      = np.unravel_index(np.argmax(temps), temps.shape)
+    hot_row, hot_col = hot_idx
+    scale_x, scale_y = OUT_W / 32, OUT_H / 24
+    cx = int((32 - 1 - hot_col) * scale_x + scale_x / 2)
+    cy = int(hot_row * scale_y + scale_y / 2)
+    bw = int(scale_x * 3)
+    bh = int(scale_y * 3)
+    cv2.rectangle(colored, (cx - bw, cy - bh), (cx + bw, cy + bh), (0, 0, 255), 2)
+    cv2.putText(colored, f"{temps.max():.1f}C",
+                (cx - bw, cy - bh - 5),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+    cv2.putText(colored, f"Mean: {temps.mean():.1f}C", (5, 20),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+
+    return colored
+
+
+def euler_to_quaternion(yaw):
+    q = Quaternion()
+    q.w = math.cos(yaw / 2.0)
+    q.x = 0.0
+    q.y = 0.0
+    q.z = math.sin(yaw / 2.0)
+    return q
+
+
+# ─────────────────────────────────────────────
+#  Nodo principal
+# ─────────────────────────────────────────────
+class ArduinoNode(Node):
+
+    def __init__(self):
+        super().__init__('arduino_node')
+
+        qos = QoSProfile(
+            reliability=QoSReliabilityPolicy.BEST_EFFORT,
+            history=QoSHistoryPolicy.KEEP_LAST,
+            depth=1
+        )
+
+        self.pub_thermal = self.create_publisher(Image,    '/thermal/image_raw', qos)
+        self.pub_odom    = self.create_publisher(Odometry, '/odom',              10)
+        self.pub_imu     = self.create_publisher(Imu,      '/imu',               10)
+        self.tf_br       = TransformBroadcaster(self)
+
+        self.cal = None
+        self._load_eeprom()
+
+        self._thermal_raw  = []
+        self._thermal_aux  = None
+        self._thermal_lock = threading.Lock()
+
+        self.get_logger().info('Esperando reset del Arduino (4s)...')
+        time.sleep(4.0)
+        try:
+            self.ser = serial.Serial('/dev/arduino', 115200, timeout=1.0)
+            self.ser.flushInput()
+            self.get_logger().info('Serial /dev/arduino abierto OK')
+        except Exception as e:
+            self.get_logger().error(f'No se pudo abrir /dev/arduino: {e}')
+            self.ser = None
+
+        self._running = True
+        self._thread  = threading.Thread(target=self._serial_reader, daemon=True)
+        self._thread.start()
+
+        self.create_timer(0.5, self._publish_thermal)
+        self.get_logger().info('arduino_node iniciado')
+
+    # ── EEPROM ────────────────────────────────
+    def _load_eeprom(self):
+        self.get_logger().info(f'Leyendo EEPROM MLX90640 en i2c-{MLX_I2C_BUS}...')
+        ee = None
+        while ee is None:
+            try:
+                ee = read_eeprom(MLX_I2C_BUS, MLX_ADDR)
+            except Exception as e:
+                self.get_logger().warn(f'Reintentando EEPROM: {e}')
+                time.sleep(2.0)
+        try:
+            self.cal = extract_calibration(ee)
+            self.get_logger().info('Calibración EEPROM OK')
+        except Exception as e:
+            self.get_logger().error(f'Error calibración: {e}')
+            self.cal = None
+
+    # ── Lector Serial ─────────────────────────
+    def _serial_reader(self):
+        while self._running:
+            if self.ser is None:
+                time.sleep(0.1)
+                continue
+            try:
+                line = self.ser.readline().decode('ascii', errors='ignore').strip()
+            except Exception:
+                time.sleep(0.05)
+                continue
+            if not line:
+                continue
+            if line.startswith('ENC:'):
+                pass
+            elif line.startswith('IMU:'):
+                self._handle_imu(line[4:])
+            elif line.startswith('ODO:'):
+                self._handle_odom(line[4:])
+            elif line.startswith('T:'):
+                self._handle_thermal(line[2:])
+
+    # ── IMU ───────────────────────────────────
+    def _handle_imu(self, payload):
+        try:
+            parts = [float(x) for x in payload.split(',')]
+            if len(parts) < 6:
+                return
+            ax_g, ay_g, az_g, gx_ds, gy_ds, gz_ds = parts[:6]
+        except ValueError:
+            return
+
+        msg = Imu()
+        msg.header.stamp    = self.get_clock().now().to_msg()
+        msg.header.frame_id = 'imu_link'
+
+        # g -> m/s²
+        msg.linear_acceleration.x = ax_g * GRAVITY
+        msg.linear_acceleration.y = ay_g * GRAVITY
+        msg.linear_acceleration.z = az_g * GRAVITY
+
+        # °/s -> rad/s
+        msg.angular_velocity.x = gx_ds * DEG_TO_RAD
+        msg.angular_velocity.y = gy_ds * DEG_TO_RAD
+        msg.angular_velocity.z = gz_ds * DEG_TO_RAD
+
+        msg.orientation_covariance[0]         = -1.0
+        msg.angular_velocity_covariance[0]    = 1e-6
+        msg.linear_acceleration_covariance[0] = 1e-6
+
+        self.pub_imu.publish(msg)
+
+    # ── Odometría ─────────────────────────────
+    def _handle_odom(self, payload):
+        try:
+            parts = [float(x) for x in payload.split(',')]
+            if len(parts) < 3:
+                return
+            x, y, theta_deg = parts[:3]
+        except ValueError:
+            return
+
+        theta = theta_deg * DEG_TO_RAD
+        q     = euler_to_quaternion(theta)
+        now   = self.get_clock().now().to_msg()
+
+        odom = Odometry()
+        odom.header.stamp    = now
+        odom.header.frame_id = 'odom'
+        odom.child_frame_id  = 'base_link'
+        odom.pose.pose.position.x  = x
+        odom.pose.pose.position.y  = y
+        odom.pose.pose.position.z  = 0.0
+        odom.pose.pose.orientation = q
+        odom.pose.covariance[0]  = 1e-3
+        odom.pose.covariance[7]  = 1e-3
+        odom.pose.covariance[35] = 1e-3
+        self.pub_odom.publish(odom)
+
+        tf = TransformStamped()
+        tf.header.stamp            = now
+        tf.header.frame_id         = 'odom'
+        tf.child_frame_id          = 'base_link'
+        tf.transform.translation.x = x
+        tf.transform.translation.y = y
+        tf.transform.translation.z = 0.0
+        tf.transform.rotation      = q
+        self.tf_br.sendTransform(tf)
+
+    # ── Térmica ───────────────────────────────
+    def _handle_thermal(self, payload):
+        try:
+            values = [int(x) for x in payload.split(',')]
+        except ValueError:
+            return
+
+        if len(values) != 772:
+            return
+
+        VDD_pix, V_PTAT, V_BE, GAIN_ram = values[:4]
+        arr = np.array(values[4:], dtype=np.float32)
+
+        mask = (arr == -9999) | (arr > 10000) | (arr < -5000)
+        if np.all(mask):
+            return
+        arr[mask] = float(np.mean(arr[~mask]))
+
+        with self._thermal_lock:
+            self._thermal_raw = arr
+            self._thermal_aux = (VDD_pix, V_PTAT, V_BE, GAIN_ram)
+
+    # ── Publicar imagen térmica (2 Hz) ────────
+    def _publish_thermal(self):
+        with self._thermal_lock:
+            if len(self._thermal_raw) != 768 or self._thermal_aux is None:
+                return
+            raw = np.array(self._thermal_raw, dtype=np.float32)
+            VDD_pix, V_PTAT, V_BE, GAIN_ram = self._thermal_aux
+
+        if self.cal is None:
+            return
+
+        try:
+            temps = raw_to_celsius(raw, self.cal, VDD_pix, V_PTAT, V_BE, GAIN_ram)
+        except Exception as e:
+            self.get_logger().warn(f'Error conversión térmica: {e}')
+            return
+
+        if temps is None:
+            return
+
+        img_bgr = temps_to_image(temps)
+
+        msg = Image()
+        msg.header.stamp    = self.get_clock().now().to_msg()
+        msg.header.frame_id = 'thermal'
+        msg.height          = OUT_H
+        msg.width           = OUT_W
+        msg.encoding        = 'bgr8'
+        msg.is_bigendian    = False
+        msg.step            = OUT_W * 3
+        msg.data            = img_bgr.tobytes()
+        self.pub_thermal.publish(msg)
+
+        self.get_logger().info(
+            f'Thermal Min={temps.min():.1f} Max={temps.max():.1f} Mean={temps.mean():.1f}C'
+        )
+
+    # ── Cleanup ───────────────────────────────
+    def destroy_node(self):
+        self._running = False
+        if self.ser and self.ser.is_open:
+            self.ser.close()
+        super().destroy_node()
+
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = ArduinoNode()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()
