@@ -135,11 +135,9 @@ def extract_calibration(ee):
     return c
 
 
-def raw_to_celsius(raw, cal, VDD_pix, V_PTAT, V_BE, GAIN_ram):
+def raw_to_celsius(raw, cal):
     Ta = 25.0
-    K_gain  = 1.0  # sin GAIN_ram real, relativo
-    pix_gain = raw * K_gain
-    pix_os   = pix_gain - cal['pix_os_ref'] * (1 + cal['KsTa'] * (Ta - 25))
+    pix_os = raw - cal['pix_os_ref'] * (1 + cal['KsTa'] * (Ta - 25))
 
     Tr   = Ta - 8
     TaK4 = (Ta + 273.15) ** 4
@@ -147,29 +145,31 @@ def raw_to_celsius(raw, cal, VDD_pix, V_PTAT, V_BE, GAIN_ram):
     Ta_r = TrK4 - (TrK4 - TaK4)
 
     alpha = np.where(cal['alpha_pix'] == 0, 1e-10, cal['alpha_pix'])
-    
+
     inner = alpha ** 3 * pix_os + alpha ** 4 * Ta_r
-    inner = np.where(inner < 0, 0, inner)  # evita NaN en raíz
-    
+    inner = np.where(inner < 0, 0, inner)
+
     Sx = cal['KsTo2'] * inner ** 0.25
-    
+
     denom = alpha * (1 - cal['KsTo2'] * 273.15) + Sx
     denom = np.where(np.abs(denom) < 1e-10, 1e-10, denom)
-    
+
     To_4 = pix_os / denom + Ta_r
-    To_4 = np.where(To_4 < 0, 0, To_4)  # evita NaN en raíz
-    
+    To_4 = np.where(To_4 < 0, 0, To_4)
+
     To = To_4 ** 0.25 - 273.15
     return To.reshape(24, 32)
 
 
 def temps_to_image(temps):
-    normalized = np.clip((temps - T_MIN) / (T_MAX - T_MIN), 0, 1)
-    gray8      = (normalized * 255).astype(np.uint8)
-    colored    = cv2.applyColorMap(gray8, cv2.COLORMAP_INFERNO)
-    colored    = cv2.resize(colored, (OUT_W, OUT_H), interpolation=cv2.INTER_CUBIC)
-    colored    = cv2.flip(colored, 1)
+    temps_clamped = np.clip(temps, T_MIN, T_MAX)
+    normalized = (temps_clamped - T_MIN) / (T_MAX - T_MIN)
+    gray8   = (normalized * 255).astype(np.uint8)
+    colored = cv2.applyColorMap(gray8, cv2.COLORMAP_INFERNO)
+    colored = cv2.resize(colored, (OUT_W, OUT_H), interpolation=cv2.INTER_CUBIC)
+    colored = cv2.flip(colored, 1)
 
+    # Hotspot usando temps sin clamp para encontrar el pixel más caliente real
     hot_idx          = np.unravel_index(np.argmax(temps), temps.shape)
     hot_row, hot_col = hot_idx
     scale_x = OUT_W / 32
@@ -214,8 +214,9 @@ class ArduinoNode(Node):
 
         self.cal           = None
         self._thermal_raw  = None
-        self._thermal_aux  = None
         self._thermal_lock = threading.Lock()
+        self._odom_count   = 0
+        self._imu_count    = 0
 
         self.get_logger().info('Esperando reset del Arduino (4s)...')
         time.sleep(4.0)
@@ -231,8 +232,26 @@ class ArduinoNode(Node):
         self._thread  = threading.Thread(target=self._serial_reader, daemon=True)
         self._thread.start()
 
-        self.create_timer(0.5, self._publish_thermal)
+        self.create_timer(0.5,  self._publish_thermal)
+        self.create_timer(15.0, self._request_eeprom_if_needed)
+        self.create_timer(5.0,  self._log_status)
         self.get_logger().info('arduino_node listo — esperando EEPROM del Arduino...')
+
+    def _log_status(self):
+        self.get_logger().info(
+            f'Status — IMU: {self._imu_count} msgs | ODO: {self._odom_count} msgs | '
+            f'EEPROM: {"OK" if self.cal else "pendiente"}'
+        )
+        self._imu_count  = 0
+        self._odom_count = 0
+
+    def _request_eeprom_if_needed(self):
+        if self.cal is None and self.ser and self.ser.is_open:
+            self.get_logger().info('Re-solicitando EEPROM al Arduino...')
+            try:
+                self.ser.write(b'E')
+            except Exception as e:
+                self.get_logger().warn(f'Error solicitando EEPROM: {e}')
 
     def _handle_eeprom(self, payload):
         try:
@@ -293,6 +312,7 @@ class ArduinoNode(Node):
         msg.angular_velocity_covariance[0]    = 1e-6
         msg.linear_acceleration_covariance[0] = 1e-6
         self.pub_imu.publish(msg)
+        self._imu_count += 1
 
     def _handle_odom(self, payload):
         try:
@@ -319,6 +339,7 @@ class ArduinoNode(Node):
         odom.pose.covariance[7]  = 1e-3
         odom.pose.covariance[35] = 1e-3
         self.pub_odom.publish(odom)
+        self._odom_count += 1
 
         tf = TransformStamped()
         tf.header.stamp            = now
@@ -340,7 +361,7 @@ class ArduinoNode(Node):
             return
 
         arr = np.array(values, dtype=np.float32)
-        mask = (arr == -9999) | (arr > 10000) | (arr < -5000)
+        mask = (arr == -9999) | (arr > 3000) | (arr < -3000)
         if np.all(mask):
             return
         arr[mask] = float(np.mean(arr[~mask]))
@@ -355,31 +376,20 @@ class ArduinoNode(Node):
             raw = self._thermal_raw.copy()
 
         if self.cal is None:
-            self.get_logger().warn(
-                'Térmica no disponible — esperando EEPROM del Arduino',
-                throttle_duration_sec=10.0
-            )
             return
 
-        # Usa valores típicos para Ta ya que el Arduino manda solo raw sin auxiliares
-        # Para conversión exacta agregar auxiliares al formato T:
-        VDD_pix  = -12455
-        V_PTAT   = 1618
-        V_BE     = 19226
-        GAIN_ram = 5538
-
         try:
-            temps = raw_to_celsius(raw, self.cal, VDD_pix, V_PTAT, V_BE, GAIN_ram)
+            temps = raw_to_celsius(raw, self.cal)
         except Exception as e:
             self.get_logger().warn(f'Error conversión térmica: {e}')
             return
 
-        if temps is None:
+        # Filtra píxeles con temperaturas físicamente imposibles
+        temps = np.where((temps < -40) | (temps > 300), np.nan, temps)
+        if np.all(np.isnan(temps)):
             return
-
-        valid = temps[(temps > -40) & (temps < 300)]
-        if len(valid) == 0:
-            return
+        mean_val = float(np.nanmean(temps))
+        temps = np.where(np.isnan(temps), mean_val, temps)
 
         img_bgr = temps_to_image(temps)
 
@@ -395,7 +405,8 @@ class ArduinoNode(Node):
         self.pub_thermal.publish(msg)
 
         self.get_logger().info(
-            f'Thermal Min={temps.min():.1f} Max={temps.max():.1f} Mean={temps.mean():.1f}C'
+            f'Thermal Min={np.nanmin(temps):.1f} Max={np.nanmax(temps):.1f} Mean={mean_val:.1f}C',
+            throttle_duration_sec=2.0
         )
 
     def destroy_node(self):
