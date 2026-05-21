@@ -84,6 +84,32 @@ int  mlx_pixel_count       = 0;
 bool mlx_enviando          = false;
 int16_t mlx_buffer[MLX_PIXELS];
 
+void liberarBusI2C() {
+  // Pulsos de clock para liberar SDA
+  pinMode(20, OUTPUT);
+  pinMode(21, OUTPUT);
+  for (int i = 0; i < 9; i++) {
+    digitalWrite(21, HIGH); delayMicroseconds(5);
+    digitalWrite(21, LOW);  delayMicroseconds(5);
+  }
+  digitalWrite(20, LOW);  delayMicroseconds(5);
+  digitalWrite(21, HIGH); delayMicroseconds(5);
+  digitalWrite(20, HIGH); delayMicroseconds(5);
+  pinMode(20, INPUT);
+  pinMode(21, INPUT);
+  delay(200);
+
+  // Cerrar todos los canales del TCA
+  Wire.begin();
+  Wire.setClock(100000);
+  Wire.beginTransmission(0x70);
+  Wire.write(0x00);
+  Wire.endTransmission();
+  delay(100);
+  Wire.end();
+  delay(100);
+}
+
 void leerIMU(float &ax, float &ay, float &az,
              float &gx, float &gy, float &gz) {
   if (!mlx_enviando) tcaSelect(0);
@@ -137,14 +163,11 @@ void mlxInit() {
     return;
   }
   Serial.println("MLX90640 OK");
-
-  // Configurar 4Hz chess mode
   Wire.beginTransmission(MLX_ADDR);
   Wire.write(0x80); Wire.write(0x0D);
   Wire.write(0x19); Wire.write(0x01);
   Wire.endTransmission();
   delay(100);
-
   tcaSelect(0);
 }
 
@@ -240,6 +263,10 @@ void moverLado(int velocidad, int pinRPWM, int pinLPWM) {
 
 void setup() {
   Serial.begin(115200);
+
+  // Liberar bus I2C y resetear TCA antes de inicializar
+  liberarBusI2C();
+
   Wire.begin();
   Wire.setClock(400000);
   delay(500);
