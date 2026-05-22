@@ -210,23 +210,36 @@ class ArduinoNode(Node):
         self._odom_count   = 0
         self._imu_count    = 0
 
-        self.get_logger().info('Abriendo Serial...')
-        try:
-            self.ser = serial.Serial('/dev/arduino', 115200, timeout=1.0)
-            self.ser.flushInput()
-            self.get_logger().info('Serial /dev/arduino abierto OK')
-            self.get_logger().info('Esperando LISTO_PARA_R del Arduino...')
-            while True:
-                line = self.ser.readline().decode('ascii', errors='ignore').strip()
-                if line:
-                    self.get_logger().info(f'Arduino: {line}')
-                if line == 'LISTO_PARA_R':
-                    self.ser.write(b'R')
-                    self.get_logger().info('Handshake OK — R enviada al Arduino')
-                    break
-        except Exception as e:
-            self.get_logger().error(f'No se pudo abrir /dev/arduino: {e}')
-            self.ser = None
+        # ── Handshake con reintento automático ───────────────────────
+        self.ser = None
+        while self.ser is None:
+            try:
+                self.get_logger().info('Conectando a /dev/arduino...')
+                self.ser = serial.Serial('/dev/arduino', 115200, timeout=2.0)
+                self.ser.flushInput()
+                self.get_logger().info('Serial /dev/arduino abierto OK')
+                self.get_logger().info('Esperando LISTO_PARA_R del Arduino...')
+                handshake_ok = False
+                while not handshake_ok:
+                    line = self.ser.readline().decode('ascii', errors='ignore').strip()
+                    if line:
+                        self.get_logger().info(f'Arduino: {line}')
+                    if line == 'LISTO_PARA_R':
+                        self.ser.write(b'R')
+                        self.get_logger().info('Handshake OK — R enviada al Arduino')
+                        handshake_ok = True
+            except Exception as e:
+                self.get_logger().warn(
+                    f'Arduino no disponible: {e}\n'
+                    f'Verifica que el cable USB esté conectado. Reintentando en 3s...'
+                )
+                if self.ser:
+                    try:
+                        self.ser.close()
+                    except Exception:
+                        pass
+                self.ser = None
+                time.sleep(3.0)
 
         self._running = True
         self._thread  = threading.Thread(target=self._serial_reader, daemon=True)
