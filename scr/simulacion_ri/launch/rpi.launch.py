@@ -82,6 +82,24 @@ def generate_launch_description():
             }],
         ),
 
+        # ── SLAM Toolbox ──────────────────────────────────────────────
+        Node(
+            package='slam_toolbox',
+            executable='async_slam_toolbox_node',
+            name='slam_toolbox',
+            output='screen',
+            parameters=[{
+                'use_sim_time': False,
+                'odom_frame': 'odom',
+                'map_frame': 'map',
+                'base_frame': 'base_link',
+                'scan_topic': '/scan',
+                'mode': 'mapping',
+                'resolution': 0.05,
+                'max_laser_range': 12.0,
+            }],
+        ),
+
         # ── Foxglove Bridge ───────────────────────────────────────────
         Node(
             package='foxglove_bridge',
