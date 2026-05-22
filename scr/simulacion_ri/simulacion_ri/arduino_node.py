@@ -136,25 +136,18 @@ def extract_calibration(ee):
 def raw_to_celsius(raw, cal):
     Ta = 25.0
     pix_os = raw - cal['pix_os_ref'] * (1 + cal['KsTa'] * (Ta - 25))
-
     Tr   = Ta - 8
     TaK4 = (Ta + 273.15) ** 4
     TrK4 = (Tr + 273.15) ** 4
     Ta_r = TrK4 - (TrK4 - TaK4)
-
     alpha = np.where(cal['alpha_pix'] == 0, 1e-10, cal['alpha_pix'])
-
     inner = alpha ** 3 * pix_os + alpha ** 4 * Ta_r
     inner = np.where(inner < 0, 0, inner)
-
     Sx = cal['KsTo2'] * inner ** 0.25
-
     denom = alpha * (1 - cal['KsTo2'] * 273.15) + Sx
     denom = np.where(np.abs(denom) < 1e-10, 1e-10, denom)
-
     To_4 = pix_os / denom + Ta_r
     To_4 = np.where(To_4 < 0, 0, To_4)
-
     To = To_4 ** 0.25 - 273.15
     return To.reshape(24, 32)
 
@@ -164,13 +157,11 @@ def temps_to_image(temps):
     t_max = float(np.percentile(temps, 95))
     if t_max - t_min < 2.0:
         t_max = t_min + 2.0
-
     normalized = np.clip((temps - t_min) / (t_max - t_min), 0, 1)
     gray8   = (normalized * 255).astype(np.uint8)
     colored = cv2.applyColorMap(gray8, cv2.COLORMAP_INFERNO)
     colored = cv2.resize(colored, (OUT_W, OUT_H), interpolation=cv2.INTER_CUBIC)
     colored = cv2.flip(colored, 1)
-
     hot_idx          = np.unravel_index(np.argmax(temps), temps.shape)
     hot_row, hot_col = hot_idx
     scale_x = OUT_W / 32
@@ -219,12 +210,20 @@ class ArduinoNode(Node):
         self._odom_count   = 0
         self._imu_count    = 0
 
-        self.get_logger().info('Esperando reset del Arduino (4s)...')
-        time.sleep(4.0)
+        self.get_logger().info('Abriendo Serial...')
         try:
             self.ser = serial.Serial('/dev/arduino', 115200, timeout=1.0)
             self.ser.flushInput()
             self.get_logger().info('Serial /dev/arduino abierto OK')
+            self.get_logger().info('Esperando LISTO_PARA_R del Arduino...')
+            while True:
+                line = self.ser.readline().decode('ascii', errors='ignore').strip()
+                if line:
+                    self.get_logger().info(f'Arduino: {line}')
+                if line == 'LISTO_PARA_R':
+                    self.ser.write(b'R')
+                    self.get_logger().info('Handshake OK — R enviada al Arduino')
+                    break
         except Exception as e:
             self.get_logger().error(f'No se pudo abrir /dev/arduino: {e}')
             self.ser = None
@@ -281,7 +280,6 @@ class ArduinoNode(Node):
                 continue
             if not line:
                 continue
-
             if line.startswith('EEPROM:'):
                 self._handle_eeprom(line[7:])
             elif line.startswith('IMU:'):
@@ -299,7 +297,6 @@ class ArduinoNode(Node):
             ax_g, ay_g, az_g, gx_ds, gy_ds, gz_ds = parts[:6]
         except ValueError:
             return
-
         msg = Imu()
         msg.header.stamp    = self.get_clock().now().to_msg()
         msg.header.frame_id = 'imu_link'
@@ -323,11 +320,9 @@ class ArduinoNode(Node):
             x, y, theta_deg = parts[:3]
         except ValueError:
             return
-
         theta = theta_deg * DEG_TO_RAD
         q     = euler_to_quaternion(theta)
         now   = self.get_clock().now().to_msg()
-
         odom = Odometry()
         odom.header.stamp    = now
         odom.header.frame_id = 'odom'
@@ -341,7 +336,6 @@ class ArduinoNode(Node):
         odom.pose.covariance[35] = 1e-3
         self.pub_odom.publish(odom)
         self._odom_count += 1
-
         tf = TransformStamped()
         tf.header.stamp            = now
         tf.header.frame_id         = 'odom'
@@ -357,16 +351,13 @@ class ArduinoNode(Node):
             values = [int(x) for x in payload.split(',') if x]
         except ValueError:
             return
-
         if len(values) != 768:
             return
-
         arr = np.array(values, dtype=np.float32)
         mask = (arr == -9999) | (arr > 1500) | (arr < -1500)
         if np.all(mask):
             return
         arr[mask] = float(np.mean(arr[~mask]))
-
         with self._thermal_lock:
             self._thermal_raw = arr
 
@@ -375,24 +366,19 @@ class ArduinoNode(Node):
             if self._thermal_raw is None:
                 return
             raw = self._thermal_raw.copy()
-
         if self.cal is None:
             return
-
         try:
             temps = raw_to_celsius(raw, self.cal)
         except Exception as e:
             self.get_logger().warn(f'Error conversión térmica: {e}')
             return
-
         temps = np.where((temps < -40) | (temps > 300), np.nan, temps)
         if np.all(np.isnan(temps)):
             return
         mean_val = float(np.nanmean(temps))
         temps = np.where(np.isnan(temps), mean_val, temps)
-
         img_bgr = temps_to_image(temps)
-
         msg = Image()
         msg.header.stamp    = self.get_clock().now().to_msg()
         msg.header.frame_id = 'thermal'
@@ -403,7 +389,6 @@ class ArduinoNode(Node):
         msg.step            = OUT_W * 3
         msg.data            = img_bgr.tobytes()
         self.pub_thermal.publish(msg)
-
         self.get_logger().info(
             f'Thermal Min={np.nanmin(temps):.1f} Max={np.nanmax(temps):.1f} Mean={mean_val:.1f}C',
             throttle_duration_sec=2.0
