@@ -1,7 +1,6 @@
 #include <Wire.h>
 #include <EnableInterrupt.h>
 
-// ── TCA9548A ─────────────────────────────────────────
 #define TCA_ADDR 0x70
 
 void tcaSelect(uint8_t canal) {
@@ -10,9 +9,7 @@ void tcaSelect(uint8_t canal) {
   Wire.endTransmission();
 }
 
-// ── RC ──────────────────────────────────────────────
 const int CH1 = 11, CH2 = 4, CH3 = 12, CH4 = 5;
-
 volatile unsigned long ch1_rise = 0, ch3_rise = 0;
 volatile int ch1_val = 1500, ch3_val = 1500;
 
@@ -33,11 +30,9 @@ int mapearCanal(int raw) {
   return valor;
 }
 
-// ── Motores ─────────────────────────────────────────
 const int RPWM_IZQ = 7, LPWM_IZQ = 6;
 const int RPWM_DER = 9, LPWM_DER = 8;
 
-// ── Encoders ────────────────────────────────────────
 const int ENC_FL_A = 2,  ENC_FL_B = 22;
 const int ENC_RL_A = 3,  ENC_RL_B = 23;
 const int ENC_FR_A = 18, ENC_FR_B = 24;
@@ -50,30 +45,25 @@ void contarRL() { if (digitalRead(ENC_RL_B) == HIGH) ticks_izq++; else ticks_izq
 void contarFR() { }
 void contarRR() { if (digitalRead(ENC_RR_B) == LOW)  ticks_der++; else ticks_der--; }
 
-// ── Parámetros físicos ──────────────────────────────
 const float TICKS_POR_VUELTA = 491.0;
 const float RADIO_RUEDA      = 0.0325;
 const float DIST_POR_PULSO   = (2 * PI * RADIO_RUEDA) / TICKS_POR_VUELTA;
 const float DIST_ENTRE_EJES  = 0.2814;
 
-// ── Odometría ───────────────────────────────────────
 float x = 0, y = 0, theta = 0;
 long ticks_izq_odo_prev = 0, ticks_der_odo_prev = 0;
 unsigned long t_odo_ant = 0;
 
-// ── Velocidad ───────────────────────────────────────
 unsigned long tiempo_anterior = 0;
 long ticks_izq_anterior = 0, ticks_der_anterior = 0;
 float vel_real_izq = 0, vel_real_der = 0;
 int ch1_filtrado = 0, ch3_filtrado = 0;
 
-// ── IMU ─────────────────────────────────────────────
 #define MPU_ADDR 0x68
 float bias_gx = 0, bias_gy = 0, bias_gz = 0;
 float yaw_filtro = 0;
 unsigned long t_imu_ant = 0;
 
-// ── MLX90640 ────────────────────────────────────────
 #define MLX_ADDR    0x33
 #define MLX_PIXELS  768
 #define MLX_INTERVAL 250
@@ -85,7 +75,6 @@ bool mlx_enviando          = false;
 int16_t mlx_buffer[MLX_PIXELS];
 
 void liberarBusI2C() {
-  // Pulsos de clock para liberar SDA
   pinMode(20, OUTPUT);
   pinMode(21, OUTPUT);
   for (int i = 0; i < 9; i++) {
@@ -98,8 +87,6 @@ void liberarBusI2C() {
   pinMode(20, INPUT);
   pinMode(21, INPUT);
   delay(200);
-
-  // Cerrar todos los canales del TCA
   Wire.begin();
   Wire.setClock(100000);
   Wire.beginTransmission(0x70);
@@ -201,7 +188,6 @@ void mlxMandarEEPROM() {
 
 void mlxTickNB() {
   unsigned long ahora = millis();
-
   if (!mlx_enviando) {
     if (ahora - t_mlx_ant >= MLX_INTERVAL) {
       t_mlx_ant         = ahora;
@@ -212,14 +198,12 @@ void mlxTickNB() {
     }
     return;
   }
-
   if (mlx_bloque_actual < 48) {
     uint16_t addr = 0x0400 + mlx_bloque_actual * 16;
     Wire.beginTransmission(MLX_ADDR);
     Wire.write(addr >> 8);
     Wire.write(addr & 0xFF);
     uint8_t err = Wire.endTransmission(false);
-
     if (err != 0) {
       for (int i = 0; i < 16; i++)
         mlx_buffer[mlx_pixel_count++] = -9999;
@@ -235,7 +219,6 @@ void mlxTickNB() {
       }
     }
     mlx_bloque_actual++;
-
     if (mlx_bloque_actual >= 48) {
       Serial.print("T:");
       for (int i = 0; i < MLX_PIXELS; i++) {
@@ -249,7 +232,6 @@ void mlxTickNB() {
   }
 }
 
-// ── Motores ─────────────────────────────────────────
 void moverLado(int velocidad, int pinRPWM, int pinLPWM) {
   if (abs(velocidad) < 10) {
     analogWrite(pinRPWM, 0); analogWrite(pinLPWM, 0);
@@ -264,7 +246,12 @@ void moverLado(int velocidad, int pinRPWM, int pinLPWM) {
 void setup() {
   Serial.begin(115200);
 
-  // Liberar bus I2C y resetear TCA antes de inicializar
+  // Apagar motores explícitamente al arrancar
+  pinMode(RPWM_IZQ, OUTPUT); pinMode(LPWM_IZQ, OUTPUT);
+  pinMode(RPWM_DER, OUTPUT); pinMode(LPWM_DER, OUTPUT);
+  analogWrite(RPWM_IZQ, 0); analogWrite(LPWM_IZQ, 0);
+  analogWrite(RPWM_DER, 0); analogWrite(LPWM_DER, 0);
+
   liberarBusI2C();
 
   Wire.begin();
@@ -285,16 +272,24 @@ void setup() {
   Wire.write(0x1A); Wire.write(0x06);
   Wire.endTransmission();
   delay(200);
-  calibrarIMU();
 
+  calibrarIMU();
   mlxInit();
+
+  // ── Handshake con RPi ─────────────────────────────
+  Serial.println("LISTO_PARA_R");
+  while (true) {
+    if (Serial.available()) {
+      char cmd = Serial.read();
+      if (cmd == 'R') break;
+    }
+  }
+
   mlxMandarEEPROM();
 
+  // Activar RC y encoders solo después del handshake
   pinMode(CH1, INPUT); enableInterrupt(CH1, isr_ch1, CHANGE);
   pinMode(CH3, INPUT); enableInterrupt(CH3, isr_ch3, CHANGE);
-
-  pinMode(RPWM_IZQ, OUTPUT); pinMode(LPWM_IZQ, OUTPUT);
-  pinMode(RPWM_DER, OUTPUT); pinMode(LPWM_DER, OUTPUT);
 
   pinMode(ENC_FL_A, INPUT_PULLUP); pinMode(ENC_FL_B, INPUT_PULLUP);
   pinMode(ENC_RL_A, INPUT_PULLUP); pinMode(ENC_RL_B, INPUT_PULLUP);
