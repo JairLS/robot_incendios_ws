@@ -217,12 +217,16 @@ class ArduinoNode(Node):
                 self.get_logger().info('Conectando a /dev/arduino...')
                 self.ser = serial.Serial('/dev/arduino', 115200, timeout=2.0)
 
-                # ── Reset DTR — igual que el IDE de Arduino ───────────
+                # ── Reset DTR doble ───────────────────────────────
                 self.get_logger().info('Reseteando Arduino via DTR...')
                 self.ser.setDTR(False)
                 time.sleep(0.1)
                 self.ser.setDTR(True)
-                time.sleep(2.0)  # espera que arranque y calibre
+                time.sleep(2.0)  # espera primera calibración (puede fallar)
+                self.ser.setDTR(False)
+                time.sleep(0.1)
+                self.ser.setDTR(True)  # segundo reset — ahora el bus ya está limpio
+                time.sleep(1.0)
                 self.ser.flushInput()
 
                 self.get_logger().info('Serial /dev/arduino abierto OK')
