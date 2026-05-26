@@ -216,7 +216,15 @@ class ArduinoNode(Node):
             try:
                 self.get_logger().info('Conectando a /dev/arduino...')
                 self.ser = serial.Serial('/dev/arduino', 115200, timeout=2.0)
+
+                # ── Reset DTR — igual que el IDE de Arduino ───────────
+                self.get_logger().info('Reseteando Arduino via DTR...')
+                self.ser.setDTR(False)
+                time.sleep(0.1)
+                self.ser.setDTR(True)
+                time.sleep(2.0)  # espera que arranque y calibre
                 self.ser.flushInput()
+
                 self.get_logger().info('Serial /dev/arduino abierto OK')
                 self.get_logger().info('Esperando LISTO_PARA_R del Arduino...')
                 handshake_ok = False
