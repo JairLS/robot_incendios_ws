@@ -75,26 +75,43 @@ bool mlx_enviando          = false;
 int16_t mlx_buffer[MLX_PIXELS];
 
 void liberarBusI2C() {
+  // ── Primera pasada de pulsos ──────────────────────
   pinMode(20, OUTPUT);
   pinMode(21, OUTPUT);
-  for (int i = 0; i < 9; i++) {
-    digitalWrite(21, HIGH); delayMicroseconds(5);
-    digitalWrite(21, LOW);  delayMicroseconds(5);
+  for (int i = 0; i < 18; i++) {
+    digitalWrite(21, HIGH); delayMicroseconds(10);
+    digitalWrite(21, LOW);  delayMicroseconds(10);
   }
-  digitalWrite(20, LOW);  delayMicroseconds(5);
-  digitalWrite(21, HIGH); delayMicroseconds(5);
-  digitalWrite(20, HIGH); delayMicroseconds(5);
+  digitalWrite(20, LOW);  delayMicroseconds(10);
+  digitalWrite(21, HIGH); delayMicroseconds(10);
+  digitalWrite(20, HIGH); delayMicroseconds(10);
   pinMode(20, INPUT);
   pinMode(21, INPUT);
-  delay(200);
+  delay(500);
+
+  // ── Resetear TCA a clock muy lento ───────────────
   Wire.begin();
-  Wire.setClock(100000);
+  Wire.setClock(50000);
   Wire.beginTransmission(0x70);
   Wire.write(0x00);
   Wire.endTransmission();
-  delay(100);
+  delay(200);
   Wire.end();
-  delay(100);
+  delay(200);
+
+  // ── Segunda pasada de pulsos ──────────────────────
+  pinMode(20, OUTPUT);
+  pinMode(21, OUTPUT);
+  for (int i = 0; i < 9; i++) {
+    digitalWrite(21, HIGH); delayMicroseconds(10);
+    digitalWrite(21, LOW);  delayMicroseconds(10);
+  }
+  digitalWrite(20, LOW);  delayMicroseconds(10);
+  digitalWrite(21, HIGH); delayMicroseconds(10);
+  digitalWrite(20, HIGH); delayMicroseconds(10);
+  pinMode(20, INPUT);
+  pinMode(21, INPUT);
+  delay(200);
 }
 
 void leerIMU(float &ax, float &ay, float &az,
@@ -246,7 +263,6 @@ void moverLado(int velocidad, int pinRPWM, int pinLPWM) {
 void setup() {
   Serial.begin(115200);
 
-  // Apagar motores explícitamente al arrancar
   pinMode(RPWM_IZQ, OUTPUT); pinMode(LPWM_IZQ, OUTPUT);
   pinMode(RPWM_DER, OUTPUT); pinMode(LPWM_DER, OUTPUT);
   analogWrite(RPWM_IZQ, 0); analogWrite(LPWM_IZQ, 0);
@@ -276,7 +292,6 @@ void setup() {
   calibrarIMU();
   mlxInit();
 
-  // ── Handshake con RPi ─────────────────────────────
   Serial.println("LISTO_PARA_R");
   while (true) {
     if (Serial.available()) {
@@ -287,7 +302,6 @@ void setup() {
 
   mlxMandarEEPROM();
 
-  // Activar RC y encoders solo después del handshake
   pinMode(CH1, INPUT); enableInterrupt(CH1, isr_ch1, CHANGE);
   pinMode(CH3, INPUT); enableInterrupt(CH3, isr_ch3, CHANGE);
 
