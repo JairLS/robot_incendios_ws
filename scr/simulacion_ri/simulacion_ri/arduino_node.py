@@ -214,17 +214,16 @@ class ArduinoNode(Node):
         self.ser = None
         while self.ser is None:
             try:
+                self.get_logger().info('Esperando estabilizacion del hardware...')
+                time.sleep(5.0)  # ← da tiempo al TCA de estabilizarse en frio
+
                 self.get_logger().info('Conectando a /dev/arduino...')
                 self.ser = serial.Serial('/dev/arduino', 115200, timeout=2.0)
 
-                # ── Reset DTR doble ───────────────────────────────
+                # ── Reset DTR simple ──────────────────────────────
                 self.ser.setDTR(False)
                 time.sleep(0.1)
-                self.ser.setDTR(True)   # primer reset → corre liberarBusI2C()
-                time.sleep(1.5)          # espera que liberarBusI2C() termine
-                self.ser.setDTR(False)
-                time.sleep(0.1)
-                self.ser.setDTR(True)   # segundo reset → ahora calibra limpio
+                self.ser.setDTR(True)   # reset → Arduino arranca con bus ya estable
                 time.sleep(1.0)
                 self.ser.flushInput()
 
