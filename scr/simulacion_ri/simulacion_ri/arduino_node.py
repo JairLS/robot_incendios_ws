@@ -218,14 +218,13 @@ class ArduinoNode(Node):
                 self.ser = serial.Serial('/dev/arduino', 115200, timeout=2.0)
 
                 # ── Reset DTR doble ───────────────────────────────
-                self.get_logger().info('Reseteando Arduino via DTR...')
                 self.ser.setDTR(False)
                 time.sleep(0.1)
-                self.ser.setDTR(True)
-                time.sleep(2.0)  # espera primera calibración (puede fallar)
+                self.ser.setDTR(True)   # primer reset → corre liberarBusI2C()
+                time.sleep(1.5)          # espera que liberarBusI2C() termine
                 self.ser.setDTR(False)
                 time.sleep(0.1)
-                self.ser.setDTR(True)  # segundo reset — ahora el bus ya está limpio
+                self.ser.setDTR(True)   # segundo reset → ahora calibra limpio
                 time.sleep(1.0)
                 self.ser.flushInput()
 
