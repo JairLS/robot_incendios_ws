@@ -215,22 +215,22 @@ class ArduinoNode(Node):
         while self.ser is None:
             try:
                 self.get_logger().info('Esperando estabilizacion del hardware...')
-                time.sleep(5.0)  # ← da tiempo al TCA de estabilizarse en frio
+                time.sleep(12.0)  # espera que Arduino complete setup solo (~10s)
 
                 self.get_logger().info('Conectando a /dev/arduino...')
-                self.ser = serial.Serial('/dev/arduino', 115200, timeout=2.0)
-
-                # ── Reset DTR simple ──────────────────────────────
-                self.ser.setDTR(False)
-                time.sleep(0.1)
-                self.ser.setDTR(True)   # reset → Arduino arranca con bus ya estable
-                time.sleep(1.0)
+                self.ser = serial.Serial(
+                    '/dev/arduino', 115200,
+                    timeout=3.0,
+                    dsrdtr=False,   # ← NO activa DTR al abrir el puerto
+                    rtscts=False
+                )
                 self.ser.flushInput()
 
                 self.get_logger().info('Serial /dev/arduino abierto OK')
                 self.get_logger().info('Esperando LISTO_PARA_R del Arduino...')
                 handshake_ok = False
-                while not handshake_ok:
+                deadline = time.time() + 30
+                while not handshake_ok and time.time() < deadline:
                     line = self.ser.readline().decode('ascii', errors='ignore').strip()
                     if line:
                         self.get_logger().info(f'Arduino: {line}')
@@ -238,10 +238,15 @@ class ArduinoNode(Node):
                         self.ser.write(b'R')
                         self.get_logger().info('Handshake OK — R enviada al Arduino')
                         handshake_ok = True
+                    elif line == 'IMU_FALLO':
+                        self.get_logger().error('Arduino reportó IMU_FALLO — reintentando...')
+                        raise Exception('IMU_FALLO')
+                if not handshake_ok:
+                    raise Exception('Timeout esperando LISTO_PARA_R')
             except Exception as e:
                 self.get_logger().warn(
                     f'Arduino no disponible: {e}\n'
-                    f'Verifica que el cable USB esté conectado. Reintentando en 3s...'
+                    f'Reintentando en 3s...'
                 )
                 if self.ser:
                     try:
