@@ -1,1 +1,0 @@
-/home/jairls/robot_incendios_ws/build/diff_drive_sim/launch/robot_slam_launch.py

@@ -1,1 +1,0 @@
-/home/jairls/robot_incendios_ws/build/interfaces_tutorial/rosidl_typesupport_introspection_cpp/interfaces_tutorial/action/detail/counter__rosidl_typesupport_introspection_cpp.hpp

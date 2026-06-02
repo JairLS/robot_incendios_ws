@@ -1,9 +1,0 @@
-{
-  "package_name": "interfaces_tutorial",
-  "non_idl_tuples": [
-    "/home/jairls/robot_incendios_ws/scr/ros2-tutorials-ws/src/interfaces_tutorial:msg/Num.msg",
-    "/home/jairls/robot_incendios_ws/scr/ros2-tutorials-ws/src/interfaces_tutorial:msg/Sphere.msg",
-    "/home/jairls/robot_incendios_ws/scr/ros2-tutorials-ws/src/interfaces_tutorial:srv/AddTwoInts.srv",
-    "/home/jairls/robot_incendios_ws/scr/ros2-tutorials-ws/src/interfaces_tutorial:action/Counter.action"
-  ]
-}

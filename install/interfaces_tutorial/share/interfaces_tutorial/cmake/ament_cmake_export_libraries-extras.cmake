@@ -1,1 +1,0 @@
-/home/jairls/robot_incendios_ws/build/interfaces_tutorial/ament_cmake_export_libraries/ament_cmake_export_libraries-extras.cmake

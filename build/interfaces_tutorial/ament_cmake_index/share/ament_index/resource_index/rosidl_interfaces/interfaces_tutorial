@@ -1,8 +1,0 @@
-action/Counter.action
-action/Counter.idl
-msg/Num.idl
-msg/Num.msg
-msg/Sphere.idl
-msg/Sphere.msg
-srv/AddTwoInts.idl
-srv/AddTwoInts.srv

@@ -1,5 +1,0 @@
-[console_scripts]
-ekf_node = diff_drive_sim.ekf_node:main
-obstacle_avoider = diff_drive_sim.obstacle_avoider:main
-odometry_publisher = diff_drive_sim.odometry_publisher:main
-robot_driver = diff_drive_sim.webots_robot_driver:main

@@ -1,4 +1,0 @@
-[0.000000] (-) TimerEvent: {}
-[0.000172] (-) JobUnselected: {'identifier': 'Ensamblaje_V1'}
-[0.000221] (-) JobUnselected: {'identifier': 'robot_incendios'}
-[0.000234] (-) EventReactorShutdown: {}

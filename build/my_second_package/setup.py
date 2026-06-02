@@ -1,1 +1,0 @@
-/home/jairls/robot_incendios_ws/scr/ros2-tutorials-ws/src/my_second_package/setup.py

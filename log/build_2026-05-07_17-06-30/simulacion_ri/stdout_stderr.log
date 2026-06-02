@@ -1,7 +1,0 @@
--- Found ament_cmake: 2.5.6 (/opt/ros/jazzy/share/ament_cmake/cmake)
-[31mCMake Error at CMakeLists.txt:9 (install):
-  install PROGRAMS given unknown argument "install".
-
-[0m
--- Configuring incomplete, errors occurred!
-gmake: *** [Makefile:268: cmake_check_build_system] Error 1

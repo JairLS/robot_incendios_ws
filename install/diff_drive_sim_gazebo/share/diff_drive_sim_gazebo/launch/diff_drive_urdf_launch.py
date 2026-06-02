@@ -1,1 +1,0 @@
-/home/jairls/robot_incendios_ws/build/diff_drive_sim_gazebo/launch/diff_drive_urdf_launch.py

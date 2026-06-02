@@ -1,5 +1,0 @@
-[31mCMake Error at CMakeLists.txt:9 (install):
-  install PROGRAMS given unknown argument "install".
-
-[0m
-gmake: *** [Makefile:268: cmake_check_build_system] Error 1

@@ -1,1 +1,0 @@
-/home/jairls/robot_incendios_ws/build/interfaces_tutorial/rosidl_typesupport_introspection_c/interfaces_tutorial/msg/detail/sphere__rosidl_typesupport_introspection_c.h

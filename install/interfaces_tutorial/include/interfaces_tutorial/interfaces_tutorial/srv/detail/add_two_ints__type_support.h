@@ -1,1 +1,0 @@
-/home/jairls/robot_incendios_ws/build/interfaces_tutorial/rosidl_generator_c/interfaces_tutorial/srv/detail/add_two_ints__type_support.h
