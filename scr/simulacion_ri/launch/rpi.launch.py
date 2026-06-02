@@ -19,6 +19,11 @@ def generate_launch_description():
 
     share_dir = get_package_share_directory('simulacion_ri')
 
+    # Ruta al YAML de SLAM Toolbox
+    slam_params_file = os.path.join(
+        share_dir, 'config', 'mapper_params_online_async.yaml'
+    )
+
     return LaunchDescription([
 
         # ── Servidor HTTP para meshes ─────────────────────────────────
@@ -63,11 +68,12 @@ def generate_launch_description():
             parameters=[{'use_sim_time': False}],
         ),
 
-        # ── Cámara Térmica MLX90640 ───────────────────────────────────
+        # ── Arduino: IMU + Odometría + Térmica MLX90640 ───────────────
         Node(
             package='simulacion_ri',
             executable='arduino_node',
             name='arduino_node',
+            output='screen',
         ),
 
         # ── Robot State Publisher ─────────────────────────────────────
@@ -82,22 +88,13 @@ def generate_launch_description():
             }],
         ),
 
-        # ── SLAM Toolbox ──────────────────────────────────────────────
+        # ── SLAM Toolbox (carga el YAML completo) ─────────────────────
         Node(
             package='slam_toolbox',
             executable='async_slam_toolbox_node',
             name='slam_toolbox',
             output='screen',
-            parameters=[{
-                'use_sim_time': False,
-                'odom_frame': 'odom',
-                'map_frame': 'map',
-                'base_frame': 'base_link',
-                'scan_topic': '/scan',
-                'mode': 'mapping',
-                'resolution': 0.05,
-                'max_laser_range': 12.0,
-            }],
+            parameters=[slam_params_file],
         ),
 
         # ── Foxglove Bridge ───────────────────────────────────────────
