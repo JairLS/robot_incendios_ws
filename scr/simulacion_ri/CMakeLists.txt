@@ -23,8 +23,15 @@ install(PROGRAMS
   DESTINATION lib/${PROJECT_NAME}
   RENAME thermal_node
 )
+
+install(PROGRAMS
+  simulacion_ri/arduino_node.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME arduino_node
+)
+
 install(DIRECTORY
-  config launch meshes urdf textures worlds
+  config launch meshes urdf  worlds
   DESTINATION share/${PROJECT_NAME}
 )
 ament_package()
