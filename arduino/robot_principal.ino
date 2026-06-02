@@ -1,14 +1,11 @@
 #include <Wire.h>
 #include <EnableInterrupt.h>
 
-#define TCA_ADDR 0x70
+// ── Direcciones I2C (sin TCA, directo al bus) ────────────────
+#define MPU_ADDR 0x68
+#define MLX_ADDR 0x33
 
-void tcaSelect(uint8_t canal) {
-  Wire.beginTransmission(TCA_ADDR);
-  Wire.write(1 << canal);
-  Wire.endTransmission();
-}
-
+// ── RC ───────────────────────────────────────────────────────
 const int CH1 = 11, CH2 = 4, CH3 = 12, CH4 = 5;
 volatile unsigned long ch1_rise = 0, ch3_rise = 0;
 volatile int ch1_val = 1500, ch3_val = 1500;
@@ -30,9 +27,11 @@ int mapearCanal(int raw) {
   return valor;
 }
 
+// ── Motores ──────────────────────────────────────────────────
 const int RPWM_IZQ = 7, LPWM_IZQ = 6;
 const int RPWM_DER = 9, LPWM_DER = 8;
 
+// ── Encoders ─────────────────────────────────────────────────
 const int ENC_FL_A = 2,  ENC_FL_B = 22;
 const int ENC_RL_A = 3,  ENC_RL_B = 23;
 const int ENC_FR_A = 18, ENC_FR_B = 24;
@@ -59,12 +58,12 @@ long ticks_izq_anterior = 0, ticks_der_anterior = 0;
 float vel_real_izq = 0, vel_real_der = 0;
 int ch1_filtrado = 0, ch3_filtrado = 0;
 
-#define MPU_ADDR 0x68
+// ── IMU ──────────────────────────────────────────────────────
 float bias_gx = 0, bias_gy = 0, bias_gz = 0;
 float yaw_filtro = 0;
 unsigned long t_imu_ant = 0;
 
-#define MLX_ADDR    0x33
+// ── MLX90640 ─────────────────────────────────────────────────
 #define MLX_PIXELS  768
 #define MLX_INTERVAL 250
 
@@ -74,49 +73,11 @@ int  mlx_pixel_count       = 0;
 bool mlx_enviando          = false;
 int16_t mlx_buffer[MLX_PIXELS];
 
-void liberarBusI2C() {
-  // ── Primera pasada de pulsos ──────────────────────
-  pinMode(20, OUTPUT);
-  pinMode(21, OUTPUT);
-  for (int i = 0; i < 18; i++) {
-    digitalWrite(21, HIGH); delayMicroseconds(10);
-    digitalWrite(21, LOW);  delayMicroseconds(10);
-  }
-  digitalWrite(20, LOW);  delayMicroseconds(10);
-  digitalWrite(21, HIGH); delayMicroseconds(10);
-  digitalWrite(20, HIGH); delayMicroseconds(10);
-  pinMode(20, INPUT);
-  pinMode(21, INPUT);
-  delay(500);
-
-  // ── Resetear TCA a clock muy lento ───────────────
-  Wire.begin();
-  Wire.setClock(50000);
-  Wire.beginTransmission(0x70);
-  Wire.write(0x00);
-  Wire.endTransmission();
-  delay(200);
-  Wire.end();
-  delay(200);
-
-  // ── Segunda pasada de pulsos ──────────────────────
-  pinMode(20, OUTPUT);
-  pinMode(21, OUTPUT);
-  for (int i = 0; i < 9; i++) {
-    digitalWrite(21, HIGH); delayMicroseconds(10);
-    digitalWrite(21, LOW);  delayMicroseconds(10);
-  }
-  digitalWrite(20, LOW);  delayMicroseconds(10);
-  digitalWrite(21, HIGH); delayMicroseconds(10);
-  digitalWrite(20, HIGH); delayMicroseconds(10);
-  pinMode(20, INPUT);
-  pinMode(21, INPUT);
-  delay(200);
-}
-
+// ─────────────────────────────────────────────────────────────
+// IMU: lectura, calibracion
+// ─────────────────────────────────────────────────────────────
 void leerIMU(float &ax, float &ay, float &az,
              float &gx, float &gy, float &gz) {
-  if (!mlx_enviando) tcaSelect(0);
   Wire.beginTransmission(MPU_ADDR);
   Wire.write(0x3B);
   Wire.endTransmission(false);
@@ -137,15 +98,37 @@ void leerIMU(float &ax, float &ay, float &az,
   if (abs(gz) < 0.15f) gz = 0;
 }
 
-void calibrarIMU() {
+bool calibrarIMU() {
   Serial.println("Calibrando IMU...");
-  tcaSelect(0);
+
+  // Despertar el MPU6050 (sale de sleep)
+  Wire.beginTransmission(MPU_ADDR);
+  Wire.write(0x6B); Wire.write(0x00);
+  if (Wire.endTransmission() != 0) return false;
+  delay(100);
+
+  // Config accel ±4g (coincide con /8192.0)
+  Wire.beginTransmission(MPU_ADDR);
+  Wire.write(0x1C); Wire.write(0x08);
+  Wire.endTransmission();
+  delay(10);
+
+  // Config giro ±250°/s (coincide con /131.0)
+  Wire.beginTransmission(MPU_ADDR);
+  Wire.write(0x1B); Wire.write(0x00);
+  Wire.endTransmission();
+  delay(10);
+
   double sx = 0, sy = 0, sz = 0;
   for (int i = 0; i < 2000; i++) {
     Wire.beginTransmission(MPU_ADDR);
     Wire.write(0x43);
     Wire.endTransmission(false);
-    Wire.requestFrom(MPU_ADDR, 6);
+    int n = Wire.requestFrom(MPU_ADDR, 6);
+    if (n < 6) {                       // protección anti-cuelgue
+      while (Wire.available()) Wire.read();
+      return false;
+    }
     int16_t gx = Wire.read()<<8 | Wire.read();
     int16_t gy = Wire.read()<<8 | Wire.read();
     int16_t gz = Wire.read()<<8 | Wire.read();
@@ -154,29 +137,48 @@ void calibrarIMU() {
   }
   bias_gx = sx / 2000; bias_gy = sy / 2000; bias_gz = sz / 2000;
   Serial.println("IMU calibrado.");
+  return true;
 }
 
+// ─────────────────────────────────────────────────────────────
+// MLX90640: init, EEPROM, lectura no-bloqueante
+// ─────────────────────────────────────────────────────────────
 void mlxInit() {
-  tcaSelect(1);
-  Wire.beginTransmission(MLX_ADDR);
-  uint8_t err = Wire.endTransmission();
+  // La MLX90640 puede necesitar mas tiempo que el MPU para arrancar
+  // en frio. Reintentamos hasta 10 veces con 500ms entre intentos.
+  uint8_t err = 0xFF;
+  for (int intento = 1; intento <= 10; intento++) {
+    Wire.beginTransmission(MLX_ADDR);
+    err = Wire.endTransmission();
+    if (err == 0) {
+      Serial.print("MLX90640 OK (intento ");
+      Serial.print(intento);
+      Serial.println(")");
+      break;
+    }
+    Serial.print("MLX no responde aun (intento ");
+    Serial.print(intento);
+    Serial.print("/10, error: ");
+    Serial.print(err);
+    Serial.println("), esperando 500ms...");
+    delay(500);
+  }
+
   if (err != 0) {
-    Serial.print("MLX no encontrado, error: ");
+    Serial.print("MLX no encontrado tras 10 intentos, error: ");
     Serial.println(err);
-    tcaSelect(0);
     return;
   }
-  Serial.println("MLX90640 OK");
+
+  // Configuracion del refresh rate
   Wire.beginTransmission(MLX_ADDR);
   Wire.write(0x80); Wire.write(0x0D);
   Wire.write(0x19); Wire.write(0x01);
   Wire.endTransmission();
   delay(100);
-  tcaSelect(0);
 }
 
 void mlxMandarEEPROM() {
-  tcaSelect(1);
   Serial.print("EEPROM:");
   int wordCount = 0;
   for (int bloque = 0; bloque < 52; bloque++) {
@@ -200,7 +202,6 @@ void mlxMandarEEPROM() {
     }
   }
   Serial.println();
-  tcaSelect(0);
 }
 
 void mlxTickNB() {
@@ -211,7 +212,6 @@ void mlxTickNB() {
       mlx_bloque_actual = 0;
       mlx_pixel_count   = 0;
       mlx_enviando      = true;
-      tcaSelect(1);
     }
     return;
   }
@@ -244,11 +244,13 @@ void mlxTickNB() {
       }
       Serial.println();
       mlx_enviando = false;
-      tcaSelect(0);
     }
   }
 }
 
+// ─────────────────────────────────────────────────────────────
+// Motores
+// ─────────────────────────────────────────────────────────────
 void moverLado(int velocidad, int pinRPWM, int pinLPWM) {
   if (abs(velocidad) < 10) {
     analogWrite(pinRPWM, 0); analogWrite(pinLPWM, 0);
@@ -260,36 +262,35 @@ void moverLado(int velocidad, int pinRPWM, int pinLPWM) {
   else               { analogWrite(pinRPWM, 0);   analogWrite(pinLPWM, pwm); }
 }
 
+// ─────────────────────────────────────────────────────────────
+// SETUP
+// ─────────────────────────────────────────────────────────────
 void setup() {
   Serial.begin(115200);
+  delay(3000);
 
   pinMode(RPWM_IZQ, OUTPUT); pinMode(LPWM_IZQ, OUTPUT);
   pinMode(RPWM_DER, OUTPUT); pinMode(LPWM_DER, OUTPUT);
   analogWrite(RPWM_IZQ, 0); analogWrite(LPWM_IZQ, 0);
   analogWrite(RPWM_DER, 0); analogWrite(LPWM_DER, 0);
 
-  liberarBusI2C();
-
+  // Bus I2C directo. Sin TCA, sin bit-bang, sin liberar bus.
   Wire.begin();
-  Wire.setClock(400000);
+  Wire.setClock(100000);
   delay(500);
 
-  tcaSelect(0);
+  // Verificar que el MPU responde antes de calibrar
   Wire.beginTransmission(MPU_ADDR);
-  Wire.write(0x6B); Wire.write(0x00);
-  Wire.endTransmission(); delay(100);
-  Wire.beginTransmission(MPU_ADDR);
-  Wire.write(0x1B); Wire.write(0x00);
-  Wire.endTransmission();
-  Wire.beginTransmission(MPU_ADDR);
-  Wire.write(0x1C); Wire.write(0x08);
-  Wire.endTransmission();
-  Wire.beginTransmission(MPU_ADDR);
-  Wire.write(0x1A); Wire.write(0x06);
-  Wire.endTransmission();
-  delay(200);
+  if (Wire.endTransmission() != 0) {
+    Serial.println("IMU_FALLO");
+    while (true) delay(1000);
+  }
 
-  calibrarIMU();
+  if (!calibrarIMU()) {
+    Serial.println("IMU_FALLO");
+    while (true) delay(1000);
+  }
+
   mlxInit();
 
   Serial.println("LISTO_PARA_R");
@@ -318,6 +319,9 @@ void setup() {
   Serial.println("=== ROBOT LISTO ===");
 }
 
+// ─────────────────────────────────────────────────────────────
+// LOOP
+// ─────────────────────────────────────────────────────────────
 void loop() {
   unsigned long ahora = millis();
 
