@@ -15,7 +15,7 @@ def generate_launch_description():
     with open(urdf_path, 'r') as f:
         robot_description = f.read().replace(
             'package://simulacion_ri/',
-            'http://172.23.254.161:8080/'
+            'http://172.23.254.204:8080/'
         )
 
     share_dir = get_package_share_directory('simulacion_ri')
@@ -53,17 +53,6 @@ def generate_launch_description():
                 'scan_mode': 'Standard',
                 'use_sim_time': False,
             }],
-        ),
-
-        # ── Static TF: base_link → laser ───────────────────────────────
-        Node(
-            package='tf2_ros',
-            executable='static_transform_publisher',
-            name='base_to_laser_tf',
-            arguments=['0.0', '0.0', '0.10',
-                       '0',   '0',   '0',
-                       'base_link', 'laser'],
-            parameters=[{'use_sim_time': False}],
         ),
 
         # ── Cámara NoIR (picamera2) ───────────────────────────────────
