@@ -229,7 +229,7 @@ class ArduinoNode(Node):
                 self.get_logger().info('Serial /dev/arduino abierto OK')
                 self.get_logger().info('Esperando LISTO_PARA_R del Arduino...')
                 handshake_ok = False
-                deadline = time.time() + 30
+                deadline = time.time() + 60
                 while not handshake_ok and time.time() < deadline:
                     line = self.ser.readline().decode('ascii', errors='ignore').strip()
                     if line:
