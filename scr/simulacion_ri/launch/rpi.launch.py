@@ -94,7 +94,11 @@ def generate_launch_description():
             executable='async_slam_toolbox_node',
             name='slam_toolbox',
             output='screen',
-            parameters=[slam_params_file],
+            parameters=[
+                slam_params_file,
+                {'use_sim_time': False}
+            ],
+            arguments=['--ros-args', '--log-level', 'info'],
         ),
 
         # ── Foxglove Bridge ───────────────────────────────────────────
