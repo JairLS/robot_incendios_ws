@@ -30,6 +30,12 @@ install(PROGRAMS
   RENAME arduino_node
 )
 
+install(PROGRAMS
+  simulacion_ri/diagnostics_node.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME diagnostics_node
+)
+
 install(DIRECTORY
   config launch meshes urdf  worlds
   DESTINATION share/${PROJECT_NAME}

@@ -1,2 +1,36 @@
+# Workspaces externos
 scr/ros2-tutorials-ws/
-scr/ros2-tutorials-ws/
+
+# ROS 2 / Colcon build artifacts
+build/
+install/
+log/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+
+# Archivos de debug TF (view_frames de ROS)
+frames_*.gv
+frames_*.pdf
+
+# Scripts de prueba en raíz (no en paquetes)
+/test_frames.py
+/mlx_full.py
+/*.test.py
+
+# Editores
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Mapas guardados (si los generas)
+*.pgm
+mapa_*.yaml

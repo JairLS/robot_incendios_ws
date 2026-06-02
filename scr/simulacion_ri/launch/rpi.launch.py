@@ -72,6 +72,14 @@ def generate_launch_description():
             output='screen',
         ),
 
+        # ── Diagnostics: CPU/RAM/Temp/Throttling + FPS de sensores ────
+        Node(
+            package='simulacion_ri',
+            executable='diagnostics_node',
+            name='diagnostics_node',
+            output='screen',
+        ),
+
         # ── Robot State Publisher ─────────────────────────────────────
         Node(
             package='robot_state_publisher',
@@ -99,7 +107,6 @@ def generate_launch_description():
             executable='foxglove_bridge',
             name='foxglove_bridge',
             output='screen',
-            parameters=[{'use_sim_time': False}],
         ),
 
     ])
