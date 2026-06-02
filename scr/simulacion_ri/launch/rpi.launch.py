@@ -1,7 +1,8 @@
 import os
 from launch import LaunchDescription
 from launch_ros.actions import Node
-from launch.actions import ExecuteProcess
+from launch.actions import ExecuteProcess, IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
 
 
@@ -22,6 +23,12 @@ def generate_launch_description():
     # Ruta al YAML de SLAM Toolbox
     slam_params_file = os.path.join(
         share_dir, 'config', 'mapper_params_online_async.yaml'
+    )
+
+    # Launch oficial de SLAM Toolbox
+    slam_toolbox_launch = os.path.join(
+        get_package_share_directory('slam_toolbox'),
+        'launch', 'online_async_launch.py'
     )
 
     return LaunchDescription([
@@ -88,17 +95,13 @@ def generate_launch_description():
             }],
         ),
 
-        # ── SLAM Toolbox (carga el YAML completo) ─────────────────────
-        Node(
-            package='slam_toolbox',
-            executable='async_slam_toolbox_node',
-            name='slam_toolbox',
-            output='screen',
-            parameters=[
-                slam_params_file,
-                {'use_sim_time': False}
-            ],
-            arguments=['--ros-args', '--log-level', 'info'],
+        # ── SLAM Toolbox (usa el launch oficial con nuestro YAML) ─────
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(slam_toolbox_launch),
+            launch_arguments={
+                'slam_params_file': slam_params_file,
+                'use_sim_time': 'false',
+            }.items(),
         ),
 
         # ── Foxglove Bridge ───────────────────────────────────────────
