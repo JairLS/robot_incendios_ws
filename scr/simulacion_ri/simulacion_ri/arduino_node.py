@@ -2,6 +2,7 @@
 import time
 import threading
 import math
+import traceback
 
 import numpy as np
 import cv2
@@ -266,9 +267,11 @@ class ArduinoNode(Node):
         self.get_logger().info('arduino_node listo — esperando EEPROM del Arduino...')
 
     def _log_status(self):
+        thread_alive = self._thread.is_alive() if hasattr(self, '_thread') else False
         self.get_logger().info(
             f'Status — IMU: {self._imu_count} msgs | ODO: {self._odom_count} msgs | '
-            f'EEPROM: {"OK" if self.cal else "pendiente"}'
+            f'EEPROM: {"OK" if self.cal else "pendiente"} | '
+            f'Thread: {"VIVO" if thread_alive else "MUERTO"}'
         )
         self._imu_count  = 0
         self._odom_count = 0
@@ -297,25 +300,41 @@ class ArduinoNode(Node):
             self.get_logger().error(f'Error calibración: {e}')
 
     def _serial_reader(self):
-        while self._running:
-            if self.ser is None:
-                time.sleep(0.1)
-                continue
-            try:
-                line = self.ser.readline().decode('ascii', errors='ignore').strip()
-            except Exception:
-                time.sleep(0.05)
-                continue
-            if not line:
-                continue
-            if line.startswith('EEPROM:'):
-                self._handle_eeprom(line[7:])
-            elif line.startswith('IMU:'):
-                self._handle_imu(line[4:])
-            elif line.startswith('ODO:'):
-                self._handle_odom(line[4:])
-            elif line.startswith('T:'):
-                self._handle_thermal(line[2:])
+        self.get_logger().info('Thread _serial_reader INICIADO')
+        try:
+            while self._running:
+                if self.ser is None:
+                    time.sleep(0.1)
+                    continue
+                try:
+                    line = self.ser.readline().decode('ascii', errors='ignore').strip()
+                except Exception as e:
+                    self.get_logger().error(f'Error leyendo serial: {e}')
+                    time.sleep(0.05)
+                    continue
+                if not line:
+                    continue
+                try:
+                    if line.startswith('EEPROM:'):
+                        self._handle_eeprom(line[7:])
+                    elif line.startswith('IMU:'):
+                        self._handle_imu(line[4:])
+                    elif line.startswith('ODO:'):
+                        self._handle_odom(line[4:])
+                    elif line.startswith('T:'):
+                        self._handle_thermal(line[2:])
+                except Exception as e:
+                    self.get_logger().error(
+                        f'Error procesando linea "{line[:60]}": {e}\n'
+                        f'{traceback.format_exc()}'
+                    )
+        except Exception as e:
+            self.get_logger().error(
+                f'THREAD MURIO con excepcion fatal: {e}\n'
+                f'{traceback.format_exc()}'
+            )
+        finally:
+            self.get_logger().error('Thread _serial_reader TERMINO')
 
     def _handle_imu(self, payload):
         try:
