@@ -12,7 +12,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 
-from sensor_msgs.msg import Image, Imu
+from sensor_msgs.msg import Image, Imu, CompressedImage
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import TransformStamped, Quaternion
 from tf2_ros import TransformBroadcaster
@@ -200,9 +200,13 @@ class ArduinoNode(Node):
             depth=1
         )
 
-        self.pub_thermal = self.create_publisher(Image,    '/thermal/image_raw', qos)
-        self.pub_odom    = self.create_publisher(Odometry, '/odom',              10)
-        self.pub_imu     = self.create_publisher(Imu,      '/imu',               10)
+        # Termica ahora se publica como CompressedImage (JPEG) en lugar de Image raw
+        # Reduce ~230 KB/frame a ~15-20 KB/frame, evitando saturacion de red
+        self.pub_thermal = self.create_publisher(
+            CompressedImage, '/thermal/image_raw/compressed', qos
+        )
+        self.pub_odom    = self.create_publisher(Odometry, '/odom', 10)
+        self.pub_imu     = self.create_publisher(Imu,      '/imu',  10)
         self.tf_br       = TransformBroadcaster(self)
 
         self.cal           = None
@@ -261,7 +265,8 @@ class ArduinoNode(Node):
         self._thread  = threading.Thread(target=self._serial_reader, daemon=True)
         self._thread.start()
 
-        self.create_timer(0.25, self._publish_thermal)
+        # Termica a 2 Hz (cada 0.5s) en lugar de 4 Hz para reducir carga de red
+        self.create_timer(0.5,  self._publish_thermal)
         self.create_timer(15.0, self._request_eeprom_if_needed)
         self.create_timer(5.0,  self._log_status)
         self.get_logger().info('arduino_node listo — esperando EEPROM del Arduino...')
@@ -426,16 +431,16 @@ class ArduinoNode(Node):
         mean_val = float(np.nanmean(temps))
         temps = np.where(np.isnan(temps), mean_val, temps)
         img_bgr = temps_to_image(temps)
-        msg = Image()
+
+        # Comprimir como JPEG calidad 85 (alta calidad, ~10x mas pequeno que raw)
+        _, jpeg = cv2.imencode('.jpg', img_bgr, [cv2.IMWRITE_JPEG_QUALITY, 85])
+        msg = CompressedImage()
         msg.header.stamp    = self.get_clock().now().to_msg()
         msg.header.frame_id = 'thermal'
-        msg.height          = OUT_H
-        msg.width           = OUT_W
-        msg.encoding        = 'bgr8'
-        msg.is_bigendian    = False
-        msg.step            = OUT_W * 3
-        msg.data            = img_bgr.tobytes()
+        msg.format          = 'jpeg'
+        msg.data            = jpeg.tobytes()
         self.pub_thermal.publish(msg)
+
         self.get_logger().info(
             f'Thermal Min={np.nanmin(temps):.1f} Max={np.nanmax(temps):.1f} Mean={mean_val:.1f}C',
             throttle_duration_sec=2.0
