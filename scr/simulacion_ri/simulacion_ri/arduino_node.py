@@ -13,6 +13,7 @@ from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 
 from sensor_msgs.msg import Image, Imu, CompressedImage
+from std_msgs.msg import Float32
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import TransformStamped, Quaternion
 from tf2_ros import TransformBroadcaster
@@ -205,6 +206,9 @@ class ArduinoNode(Node):
         self.pub_thermal = self.create_publisher(
             CompressedImage, '/thermal/image_raw/compressed', qos
         )
+        # Temperatura maxima del frame termico, para deteccion de focos de calor
+        self.pub_max_temp = self.create_publisher(Float32, '/thermal/max_temp', 10)
+
         self.pub_odom    = self.create_publisher(Odometry, '/odom', 10)
         self.pub_imu     = self.create_publisher(Imu,      '/imu',  10)
         self.tf_br       = TransformBroadcaster(self)
@@ -429,6 +433,11 @@ class ArduinoNode(Node):
         if np.all(np.isnan(temps)):
             return
         mean_val = float(np.nanmean(temps))
+
+        # Publicar temperatura maxima para fire_detector_node
+        max_val = float(np.nanmax(temps))
+        self.pub_max_temp.publish(Float32(data=max_val))
+
         temps = np.where(np.isnan(temps), mean_val, temps)
         img_bgr = temps_to_image(temps)
 
@@ -442,7 +451,7 @@ class ArduinoNode(Node):
         self.pub_thermal.publish(msg)
 
         self.get_logger().info(
-            f'Thermal Min={np.nanmin(temps):.1f} Max={np.nanmax(temps):.1f} Mean={mean_val:.1f}C',
+            f'Thermal Min={np.nanmin(temps):.1f} Max={max_val:.1f} Mean={mean_val:.1f}C',
             throttle_duration_sec=2.0
         )
 

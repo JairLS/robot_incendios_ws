@@ -80,6 +80,14 @@ def generate_launch_description():
             output='screen',
         ),
 
+        # ── Detector de focos de calor ────────────────────────────────
+        Node(
+            package='simulacion_ri',
+            executable='fire_detector_node',
+            name='fire_detector_node',
+            output='screen',
+        ),
+
         # ── Robot State Publisher ─────────────────────────────────────
         Node(
             package='robot_state_publisher',

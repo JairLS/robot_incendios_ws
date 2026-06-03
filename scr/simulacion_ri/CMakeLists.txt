@@ -36,6 +36,12 @@ install(PROGRAMS
   RENAME diagnostics_node
 )
 
+install(PROGRAMS
+  simulacion_ri/fire_detector_node.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME fire_detector_node
+)
+
 install(DIRECTORY
   config launch meshes urdf  worlds
   DESTINATION share/${PROJECT_NAME}
