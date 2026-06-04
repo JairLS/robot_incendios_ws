@@ -10,13 +10,17 @@ const int CH1 = 11, CH2 = 4, CH3 = 12, CH4 = 5;
 volatile unsigned long ch1_rise = 0, ch3_rise = 0;
 volatile int ch1_val = 1500, ch3_val = 1500;
 
+// FAILSAFE: marca de tiempo del ultimo pulso RC valido recibido
+volatile unsigned long ultimo_pulso_rc = 0;
+const unsigned long RC_TIMEOUT_MS = 150;   // si no hay senal en 150ms -> frenar
+
 void isr_ch1() {
   if (digitalRead(CH1)) ch1_rise = micros();
-  else ch1_val = micros() - ch1_rise;
+  else { ch1_val = micros() - ch1_rise; ultimo_pulso_rc = millis(); }
 }
 void isr_ch3() {
   if (digitalRead(CH3)) ch3_rise = micros();
-  else ch3_val = micros() - ch3_rise;
+  else { ch3_val = micros() - ch3_rise; ultimo_pulso_rc = millis(); }
 }
 
 int mapearCanal(int raw) {
@@ -63,6 +67,12 @@ float bias_gx = 0, bias_gy = 0, bias_gz = 0;
 float yaw_filtro = 0;
 unsigned long t_imu_ant = 0;
 
+// Umbral del deadband de gz para la INTEGRACION de yaw.
+// Quieto, gz residual (post-bias) vive en ~0.0-0.4 deg/s (drift de bias).
+// Girando, gz vive en ~15-40 deg/s. 1.0 separa limpio: mata el drift
+// estatico sin tocar un giro real.
+const float GZ_DEADBAND = 1.0f;
+
 // ── MLX90640 ─────────────────────────────────────────────────
 #define MLX_PIXELS  768
 #define MLX_INTERVAL 250
@@ -95,7 +105,9 @@ void leerIMU(float &ax, float &ay, float &az,
   gz = (raw_gz / 131.0f) - bias_gz;
   if (abs(gx) < 0.15f) gx = 0;
   if (abs(gy) < 0.15f) gy = 0;
-  if (abs(gz) < 0.15f) gz = 0;
+  // gz NO se filtra aqui: se entrega y se imprime CRUDO (post-bias) para
+  // poder diagnosticar el bias del arranque en el test de giro.
+  // El deadband de gz se aplica solo a la integracion de yaw (ver loop).
 }
 
 bool calibrarIMU() {
@@ -331,16 +343,19 @@ void loop() {
   }
 
   float ax, ay, az, gx, gy, gz;
-  leerIMU(ax, ay, az, gx, gy, gz);
+  leerIMU(ax, ay, az, gx, gy, gz);   // gz viene CRUDO (post-bias, sin deadband)
 
   float dt_imu = (ahora - t_imu_ant) / 1000.0f;
   t_imu_ant = ahora;
-  if (abs(gz) < 0.3f) {
-    yaw_filtro = 0.98f * (yaw_filtro + gz * dt_imu) + 0.02f * yaw_filtro;
-    yaw_filtro *= 0.995f;
-  } else {
-    yaw_filtro += gz * dt_imu;
-  }
+
+  // ── Integracion de yaw ─────────────────────────────────────
+  // Deadband SOLO para integrar (no afecta el gz que se imprime).
+  // Integracion simple, SIN leak: ya no hay '*= 0.995f' jalando hacia 0,
+  // porque eso borraria el giro real cuando se sube el peso del IMU.
+  // El deadband (GZ_DEADBAND) es ahora el unico mecanismo anti-drift estatico.
+  float gz_yaw = (fabs(gz) < GZ_DEADBAND) ? 0.0f : gz;
+  yaw_filtro += gz_yaw * dt_imu;
+
   while (yaw_filtro >  180) yaw_filtro -= 360;
   while (yaw_filtro < -180) yaw_filtro += 360;
 
@@ -351,10 +366,23 @@ void loop() {
   if (abs(ch1_filtrado) < 10) ch1_filtrado = 0;
   if (abs(ch3_filtrado) < 10) ch3_filtrado = 0;
 
-  int vel_izq = constrain(-ch3_filtrado - ch1_filtrado, -100, 100);
-  int vel_der = constrain(-ch3_filtrado + ch1_filtrado, -100, 100);
-  moverLado(vel_izq, RPWM_IZQ, LPWM_IZQ);
-  moverLado(vel_der, RPWM_DER, LPWM_DER);
+  // ── FAILSAFE: si no hay senal RC reciente, frenar ──────────
+  noInterrupts();
+  unsigned long t_rc = ultimo_pulso_rc;
+  interrupts();
+
+  if (millis() - t_rc > RC_TIMEOUT_MS) {
+    // Sin senal RC -> motores a cero, ignora valores congelados
+    ch1_filtrado = 0;
+    ch3_filtrado = 0;
+    moverLado(0, RPWM_IZQ, LPWM_IZQ);
+    moverLado(0, RPWM_DER, LPWM_DER);
+  } else {
+    int vel_izq = constrain(-ch3_filtrado - ch1_filtrado, -100, 100);
+    int vel_der = constrain(-ch3_filtrado + ch1_filtrado, -100, 100);
+    moverLado(vel_izq, RPWM_IZQ, LPWM_IZQ);
+    moverLado(vel_der, RPWM_DER, LPWM_DER);
+  }
 
   if (ahora - tiempo_anterior >= 100) {
     float dt = (ahora - tiempo_anterior) / 1000.0f;
@@ -377,8 +405,25 @@ void loop() {
     float V        = (dist_izq + dist_der) / 2.0f;
     float dTheta   = (dist_der - dist_izq) / DIST_ENTRE_EJES;
     float theta_enc = theta + dTheta;
+    while (theta_enc >  PI) theta_enc -= 2 * PI;
+    while (theta_enc < -PI) theta_enc += 2 * PI;
     float theta_imu = yaw_filtro * PI / 180.0f;
-    theta = 0.95f * theta_enc + 0.05f * theta_imu;
+
+    // ── FUSION (wrap-safe) ─────────────────────────────────
+    // Peso del IMU en 0.15 (antes 0.05). El giroscopio mide la rotacion
+    // real del chasis y NO patina; los encoders patinan en los giros.
+    //
+    // CRITICO: NO mezclar como 0.85*theta_enc + 0.15*theta_imu. Eso se
+    // ROMPE cerca de +/-180: promediar -179 con +179 da ~0 (basura), y en
+    // un giro de 360 el theta cruza +/-180 -> theta da brincos a media
+    // vuelta y deforma el SLAM. Se mezcla sobre la DIFERENCIA con wrap:
+    // es identico a 0.85/0.15 cuando no hay cruce, pero correcto en el borde.
+    // Si el giro aun se desvia, subir el 0.15f (probar 0.20). No pasar de
+    // ~0.30 sin replantear: a mas peso de IMU, mas expuesto a un boot con bias malo.
+    float diff = theta_imu - theta_enc;
+    while (diff >  PI) diff -= 2 * PI;
+    while (diff < -PI) diff += 2 * PI;
+    theta = theta_enc + 0.15f * diff;
     while (theta >  PI) theta -= 2 * PI;
     while (theta < -PI) theta += 2 * PI;
     x += V * cos(theta);
@@ -394,7 +439,7 @@ void loop() {
     Serial.print(az, 3); Serial.print(",");
     Serial.print(gx, 3); Serial.print(",");
     Serial.print(gy, 3); Serial.print(",");
-    Serial.println(gz, 3);
+    Serial.println(gz, 3);   // gz CRUDO: si quieto marca >1.0 -> bias malo en este boot
 
     Serial.print("ODO:");
     Serial.print(x, 3); Serial.print(",");
