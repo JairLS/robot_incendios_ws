@@ -100,6 +100,18 @@ def generate_launch_description():
             }],
         ),
 
+        # ── Joint State Publisher (genera /joint_states para las ruedas) ──
+        Node(
+            package='joint_state_publisher',
+            executable='joint_state_publisher',
+            name='joint_state_publisher',
+            output='screen',
+            parameters=[{
+                'robot_description': robot_description,
+                'use_sim_time': False,
+            }],
+        ),
+
         # ── SLAM Toolbox (usa el launch oficial con nuestro YAML) ─────
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(slam_toolbox_launch),
