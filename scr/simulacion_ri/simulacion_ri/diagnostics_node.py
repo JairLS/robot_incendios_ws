@@ -124,6 +124,7 @@ class DiagnosticsNode(Node):
         self.pub_wifi_qual   = self.create_publisher(Float32, '/diagnostics/wifi_quality_pct', 10)
         self.pub_latency     = self.create_publisher(Float32, '/diagnostics/latency_ms', 10)
         self.pub_mission     = self.create_publisher(Int32,   '/diagnostics/mission_time_s', 10)
+        self.pub_mission_str = self.create_publisher(String,  '/diagnostics/mission_time_str', 10)
 
         # Tiempo de inicio
         self.start_time = time.time()
@@ -352,6 +353,8 @@ class DiagnosticsNode(Node):
             self.pub_wifi_qual.publish(Float32(data=float(qual)))
         self.pub_latency.publish(Float32(data=float(self._ping_latency())))
         self.pub_mission.publish(Int32(data=uptime))
+        mm, ss = divmod(int(uptime), 60)
+        self.pub_mission_str.publish(String(data=f'{mm:02d}:{ss:02d}'))
 
 
 def main():

@@ -37,7 +37,7 @@ class FireDetectorNode(Node):
     TEMP_PERSON_MAX  = 36.0   # 26-36: verde (persona). >36: rojo (foco de calor)
 
     # Geometria del marker (en metros, frame map)
-    DISTANCE_FROM_ROBOT = 3.5   # punto medio del rango utiil del MLX90640
+    DISTANCE_FROM_ROBOT = 2.0   # punto medio del rango utiil del MLX90640
     CIRCLE_RADIUS       = 2.0   # radio del circulo difuso
 
     # Throttling (evita inundar el mapa de markers basura)
