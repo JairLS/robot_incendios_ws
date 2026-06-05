@@ -13,7 +13,7 @@ from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 
 from sensor_msgs.msg import Image, Imu, CompressedImage
-from std_msgs.msg import Float32
+from std_msgs.msg import Float32, Bool
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import TransformStamped, Quaternion
 from tf2_ros import TransformBroadcaster
@@ -208,6 +208,8 @@ class ArduinoNode(Node):
         )
         # Temperatura maxima del frame termico, para deteccion de focos de calor
         self.pub_max_temp = self.create_publisher(Float32, '/thermal/max_temp', 10)
+        # Control OK: el Arduino sigue mandando telemetria por serial (link vivo)
+        self.pub_control_ok = self.create_publisher(Bool, '/diagnostics/control_ok', 10)
 
         self.pub_odom    = self.create_publisher(Odometry, '/odom', 10)
         self.pub_imu     = self.create_publisher(Imu,      '/imu',  10)
@@ -218,8 +220,10 @@ class ArduinoNode(Node):
         self._thermal_lock = threading.Lock()
         self._odom_count   = 0
         self._imu_count    = 0
+        self._last_data_time = time.time()
+        self.CONTROL_TIMEOUT_S = 1.0
 
-        # ── Handshake con reintento automático ───────────────────────
+        # Handshake con reintento automatico
         self.ser = None
         while self.ser is None:
             try:
@@ -230,7 +234,7 @@ class ArduinoNode(Node):
                 self.ser = serial.Serial(
                     '/dev/arduino', 115200,
                     timeout=3.0,
-                    dsrdtr=False,   # ← NO activa DTR al abrir el puerto
+                    dsrdtr=False,
                     rtscts=False
                 )
                 self.ser.flushInput()
@@ -245,10 +249,10 @@ class ArduinoNode(Node):
                         self.get_logger().info(f'Arduino: {line}')
                     if line == 'LISTO_PARA_R':
                         self.ser.write(b'R')
-                        self.get_logger().info('Handshake OK — R enviada al Arduino')
+                        self.get_logger().info('Handshake OK - R enviada al Arduino')
                         handshake_ok = True
                     elif line == 'IMU_FALLO':
-                        self.get_logger().error('Arduino reportó IMU_FALLO — reintentando...')
+                        self.get_logger().error('Arduino reporto IMU_FALLO - reintentando...')
                         raise Exception('IMU_FALLO')
                 if not handshake_ok:
                     raise Exception('Timeout esperando LISTO_PARA_R')
@@ -273,17 +277,23 @@ class ArduinoNode(Node):
         self.create_timer(0.5,  self._publish_thermal)
         self.create_timer(15.0, self._request_eeprom_if_needed)
         self.create_timer(5.0,  self._log_status)
-        self.get_logger().info('arduino_node listo — esperando EEPROM del Arduino...')
+        self.create_timer(0.5,  self._publish_control_ok)
+        self.get_logger().info('arduino_node listo - esperando EEPROM del Arduino...')
 
     def _log_status(self):
         thread_alive = self._thread.is_alive() if hasattr(self, '_thread') else False
         self.get_logger().info(
-            f'Status — IMU: {self._imu_count} msgs | ODO: {self._odom_count} msgs | '
+            f'Status - IMU: {self._imu_count} msgs | ODO: {self._odom_count} msgs | '
             f'EEPROM: {"OK" if self.cal else "pendiente"} | '
             f'Thread: {"VIVO" if thread_alive else "MUERTO"}'
         )
         self._imu_count  = 0
         self._odom_count = 0
+
+    def _publish_control_ok(self):
+        thread_alive = self._thread.is_alive() if hasattr(self, '_thread') else False
+        fresh = (time.time() - self._last_data_time) < self.CONTROL_TIMEOUT_S
+        self.pub_control_ok.publish(Bool(data=bool(thread_alive and fresh)))
 
     def _request_eeprom_if_needed(self):
         if self.cal is None and self.ser and self.ser.is_open:
@@ -300,13 +310,13 @@ class ArduinoNode(Node):
             self.get_logger().warn('EEPROM: error parseando')
             return
         if len(words) != 832:
-            self.get_logger().warn(f'EEPROM: esperaba 832, recibí {len(words)}')
+            self.get_logger().warn(f'EEPROM: esperaba 832, recibi {len(words)}')
             return
         try:
             self.cal = extract_calibration(words)
-            self.get_logger().info('Calibración EEPROM del Arduino OK')
+            self.get_logger().info('Calibracion EEPROM del Arduino OK')
         except Exception as e:
-            self.get_logger().error(f'Error calibración: {e}')
+            self.get_logger().error(f'Error calibracion: {e}')
 
     def _serial_reader(self):
         self.get_logger().info('Thread _serial_reader INICIADO')
@@ -323,6 +333,7 @@ class ArduinoNode(Node):
                     continue
                 if not line:
                     continue
+                self._last_data_time = time.time()
                 try:
                     if line.startswith('EEPROM:'):
                         self._handle_eeprom(line[7:])
@@ -427,7 +438,7 @@ class ArduinoNode(Node):
         try:
             temps = raw_to_celsius(raw, self.cal)
         except Exception as e:
-            self.get_logger().warn(f'Error conversión térmica: {e}')
+            self.get_logger().warn(f'Error conversion termica: {e}')
             return
         temps = np.where((temps < -40) | (temps > 300), np.nan, temps)
         if np.all(np.isnan(temps)):
