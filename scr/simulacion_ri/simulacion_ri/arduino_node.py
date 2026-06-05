@@ -22,6 +22,7 @@ GRAVITY    = 9.80665
 DEG_TO_RAD = math.pi / 180.0
 OUT_W      = 320
 OUT_H      = 240
+THERMAL_OFFSET_C = 10.9  # correccion empirica 1 punto: camara leia ~11C bajo (ref 34.6 vs 23.7)
 
 
 def extract_calibration(ee):
@@ -150,7 +151,7 @@ def raw_to_celsius(raw, cal):
     denom = np.where(np.abs(denom) < 1e-10, 1e-10, denom)
     To_4 = pix_os / denom + Ta_r
     To_4 = np.where(To_4 < 0, 0, To_4)
-    To = To_4 ** 0.25 - 273.15
+    To = To_4 ** 0.25 - 273.15 + THERMAL_OFFSET_C
     return To.reshape(24, 32)
 
 
