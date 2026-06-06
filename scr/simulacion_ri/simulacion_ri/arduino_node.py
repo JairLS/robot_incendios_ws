@@ -22,7 +22,7 @@ GRAVITY    = 9.80665
 DEG_TO_RAD = math.pi / 180.0
 OUT_W      = 320
 OUT_H      = 240
-THERMAL_OFFSET_C = 10.9  # correccion empirica 1 punto: camara leia ~11C bajo (ref 34.6 vs 23.7)
+THERMAL_OFFSET_C = 11.9 
 
 
 def extract_calibration(ee):

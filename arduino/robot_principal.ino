@@ -32,7 +32,7 @@ int mapearCanal(int raw) {
 }
 
 // ── Motores ──────────────────────────────────────────────────
-const int RPWM_IZQ = 7, LPWM_IZQ = 6;
+const int RPWM_IZQ = 10, LPWM_IZQ = 6;
 const int RPWM_DER = 9, LPWM_DER = 8;
 
 // ── Encoders ─────────────────────────────────────────────────
