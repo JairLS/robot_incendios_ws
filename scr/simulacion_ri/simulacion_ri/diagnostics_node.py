@@ -74,13 +74,20 @@ class DiagnosticsNode(Node):
         self.msg_counts = {t: 0 for t in self.topics_monitored}
         self.last_msg_time = {t: None for t in self.topics_monitored}
 
+        # QoS BEST_EFFORT para imagenes (camara y termica publican asi)
+        qos_be = QoSProfile(
+            reliability=ReliabilityPolicy.BEST_EFFORT,
+            history=HistoryPolicy.KEEP_LAST,
+            depth=10
+        )
         # Suscriptores
         for topic, msg_type in self.topics_monitored.items():
+            qos = qos_be if msg_type is CompressedImage else 10
             self.create_subscription(
                 msg_type,
                 topic,
                 lambda msg, t=topic: self._on_message(t),
-                10
+                qos
             )
             self.get_logger().info(f'Monitoreando: {topic}')
 
@@ -343,7 +350,7 @@ class DiagnosticsNode(Node):
         moving = (self._speed_mps > 0.03) or (self._yaw_rate_dps > 3.0)
         self.pub_moving.publish(Bool(data=bool(moving)))
         ALIVE_MIN = 0.5
-        cam_fps   = fps.get('/camera/image_raw/compressed', 0.0)
+        cam_fps   = fps.get('/image_raw/compressed', 0.0)
         therm_fps = fps.get('/thermal/image_raw/compressed', 0.0)
         self.pub_cam_alive.publish(Bool(data=bool(cam_fps > ALIVE_MIN)))
         self.pub_therm_alive.publish(Bool(data=bool(therm_fps > ALIVE_MIN)))
