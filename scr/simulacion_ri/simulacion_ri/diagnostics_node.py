@@ -31,6 +31,7 @@ from rclpy.node import Node
 from std_msgs.msg import String, Float32, Bool, Int32
 from sensor_msgs.msg import LaserScan, CompressedImage
 from nav_msgs.msg import Odometry
+from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy
 
 try:
     import psutil
@@ -47,7 +48,7 @@ class DiagnosticsNode(Node):
     # Mapeo topic monitoreado -> nombre corto para el topic FPS de salida
     FPS_SHORT_NAMES = {
         '/scan':                          'scan',
-        '/camera/image_raw/compressed':   'camera',
+        '/image_raw/compressed':          'camera',
         '/thermal/image_raw/compressed':  'thermal',
         '/odom':                          'odom',
     }
@@ -64,7 +65,7 @@ class DiagnosticsNode(Node):
         # Topics a monitorear: {topic_name: msg_type}
         self.topics_monitored = {
             '/scan':                          LaserScan,
-            '/camera/image_raw/compressed':   CompressedImage,
+            '/image_raw/compressed':          CompressedImage,
             '/thermal/image_raw/compressed':  CompressedImage,
             '/odom':                          Odometry,
         }
