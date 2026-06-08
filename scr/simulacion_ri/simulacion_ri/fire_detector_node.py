@@ -34,7 +34,7 @@ class FireDetectorNode(Node):
 
     # Umbrales de temperatura (Celsius)
     TEMP_MIN_DETECT  = 26.0   # debajo de esto: ignorar (ambiente)
-    TEMP_PERSON_MAX  = 36.0   # 26-36: verde (persona). >36: rojo (foco de calor)
+    TEMP_PERSON_MAX  = 40.0   # 26-40: verde (persona). >40: rojo (foco de calor)
 
     # Geometria del marker (en metros, frame map)
     DISTANCE_FROM_ROBOT = 2.0   # punto medio del rango utiil del MLX90640

@@ -289,6 +289,7 @@ void setup() {
   // Bus I2C directo. Sin TCA, sin bit-bang, sin liberar bus.
   Wire.begin();
   Wire.setClock(100000);
+  Wire.setWireTimeout(25000, true);
   delay(500);
 
   // Verificar que el MPU responde antes de calibrar
